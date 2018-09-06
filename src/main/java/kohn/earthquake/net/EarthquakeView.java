@@ -1,34 +1,32 @@
 package kohn.earthquake.net;
 
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
+import java.util.List;
 import javax.swing.*;
 import javax.swing.border.Border;
-import javax.swing.text.JTextComponent;
 
 import com.google.inject.Guice;
+import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.google.inject.Singleton;
 import kohn.earthquake.Earthquake;
 import kohn.earthquake.EarthquakeProperties;
 
-import static java.util.stream.Collectors.toCollection;
 
 
 @SuppressWarnings("serial")
 @Singleton
-public class EarthquakeView extends JFrame {
+
+public class EarthquakeView extends JFrame  {
 
 	private JTextArea earthquakes;
+    public Timer timer;
 
-    public EarthquakeView() {
+    @Inject
+    public EarthquakeView(EarthquakeController controller) {
 
 		setLocation(540, 320);
-		setSize(540, 200);
+		setSize(540, 350);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Earthquake Feed...");
 
@@ -36,11 +34,13 @@ public class EarthquakeView extends JFrame {
 		pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
         earthquakes = new JTextArea();
         pane.add(earthquakes);
-
-		Border border = BorderFactory.createEmptyBorder(20, 20, 20, 20);
         add(pane);
+		Border border = BorderFactory.createEmptyBorder(20, 20, 20, 20);
         pane.setBorder(border);
 
+        timer = new Timer(30_000,(event) -> controller.refreshData());
+        timer.setInitialDelay(0);
+        timer.start();
 		
 	}
 
@@ -48,10 +48,8 @@ public class EarthquakeView extends JFrame {
 	public static void main(String args[]) {
 		Injector injector = Guice.createInjector(new EarthquakeModule());
 		EarthquakeView view = injector.getInstance(EarthquakeView.class);
-				
-		EarthquakeController controller = injector.getInstance(EarthquakeController.class);
 
-		controller.refreshData();
+
 		
 		view.setVisible(true);
 
@@ -62,13 +60,12 @@ public class EarthquakeView extends JFrame {
 
         for (int i=0; i < earthquakeData.size(); i++) {
                 EarthquakeProperties properties = earthquakeData.get(i).getProperties();
-                String eq = " " + properties.getMag() + "\t" + properties.getPlace();
-                sb.append(eq).append("\n\n");
+                String eq=String.format("%n\t%-8s|%40s%n",properties.getMag(), properties.getPlace());
+                sb.append(eq);
         }
         earthquakes.setText(sb.toString());
 
     }
-
 
 
 }

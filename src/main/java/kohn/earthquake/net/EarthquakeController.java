@@ -14,7 +14,6 @@ import retrofit2.Response;
 import java.util.stream.Collectors;
 
 public class EarthquakeController {
-	private EarthquakeView view;
 	private USGSEarthquakeService service;
 
 	private Provider<EarthquakeView> viewProvider;
@@ -24,13 +23,12 @@ public class EarthquakeController {
 	String hour = "hour";
 	
 	@Inject
-	public EarthquakeController(EarthquakeView view, USGSEarthquakeService service, Provider<EarthquakeView> viewProvider) {
-		this.view = view;
+	public EarthquakeController(USGSEarthquakeService service, Provider<EarthquakeView> viewProvider) {
 		this.service = service;
 		this.viewProvider = viewProvider;
 	}
 	public void refreshData() {
-		service.getData(hour).enqueue(new Callback<EarthquakeFeedModel>() {
+		service.getData(day).enqueue(new Callback<EarthquakeFeedModel>() {
 			@Override
 			public void onResponse(Call<EarthquakeFeedModel> call, Response<EarthquakeFeedModel> response) {
 				EarthquakeFeedModel feed = response.body();
