@@ -16,10 +16,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class EarthquakeRetrofitClient {
 
 	public static void main(String[] args) throws IOException {
-		String month = "all_month.geojson";
-		String day = "all_day.geojson";
-		String week = "all_week.geojson";
-		String hour = "all_hour.geojson";
+		String month = "month";
+		String day = "day";
+		String week = "week";
+		String hour = "hour";
 
 		Retrofit retrofit = new Retrofit.Builder().baseUrl("https://earthquake.usgs.gov")
 				.addConverterFactory(GsonConverterFactory.create()).build();
@@ -32,13 +32,11 @@ public class EarthquakeRetrofitClient {
 			@Override
 			public void onResponse(Call<EarthquakeFeedModel> call, Response<EarthquakeFeedModel> response) {
 				EarthquakeFeedModel feed = response.body();
-				System.out.println(feed.getFeatures()
-						.stream()
-						.filter(e -> e.getProperties().getMag()>=5)
-						.count());
+				Optional<Earthquake> maxHour = feed.getFeatures().stream()
+					.max(Comparator.comparing(e -> e.getProperties().getMag()));
 
-				//System.out.print(maxHour.get().getProperties().getMag() + "\t");
-			//System.out.println(maxHour.get().getProperties().getPlace());
+			//	System.out.print(maxHour.get().getProperties().getMag() + "\t");
+			System.out.println(maxHour.get().getProperties().getPlace());
 			}
 
 			@Override
@@ -47,7 +45,7 @@ public class EarthquakeRetrofitClient {
 			}
 		});
 
-		//call = service.getData(month);
+		call = service.getData(month);
 		call.enqueue(new Callback<EarthquakeFeedModel>() {
 
 			@Override
@@ -55,8 +53,8 @@ public class EarthquakeRetrofitClient {
 				EarthquakeFeedModel feed = response.body();
 				Optional<Earthquake> maxMonth = feed.getFeatures().stream()
 						.max(Comparator.comparing(e -> e.getProperties().getMag()));
-			//	System.out.print(maxMonth.get().getProperties().getMag() + "\t");
-			//	System.out.println(maxMonth.get().getProperties().getPlace());
+				System.out.print(maxMonth.get().getProperties().getMag() + "\t");
+				System.out.println(maxMonth.get().getProperties().getPlace());
 			}
 
 			@Override
@@ -66,40 +64,40 @@ public class EarthquakeRetrofitClient {
 		});
 
 	//	call = service.getData(week);
-		call.enqueue(new Callback<EarthquakeFeedModel>() {
-
-			@Override
-			public void onResponse(Call<EarthquakeFeedModel> call, Response<EarthquakeFeedModel> response) {
-				EarthquakeFeedModel feed = response.body();
-				Optional<Earthquake> maxWeek = feed.getFeatures().stream()
-						.max(Comparator.comparing(e -> e.getProperties().getMag()));
-			//	System.out.print(maxWeek.get().getProperties().getMag() + "\t");
-				//System.out.println(maxWeek.get().getProperties().getPlace());
-			}
-
-			@Override
-			public void onFailure(Call<EarthquakeFeedModel> call, Throwable t) {
-				t.printStackTrace();
-			}
-		});
+//		call.enqueue(new Callback<EarthquakeFeedModel>() {
+//
+//			@Override
+//			public void onResponse(Call<EarthquakeFeedModel> call, Response<EarthquakeFeedModel> response) {
+//				EarthquakeFeedModel feed = response.body();
+//				Optional<Earthquake> maxWeek = feed.getFeatures().stream()
+//						.max(Comparator.comparing(e -> e.getProperties().getMag()));
+//			//	System.out.print(maxWeek.get().getProperties().getMag() + "\t");
+//				//System.out.println(maxWeek.get().getProperties().getPlace());
+//			}
+//
+//			@Override
+//			public void onFailure(Call<EarthquakeFeedModel> call, Throwable t) {
+//				t.printStackTrace();
+//			}
+//		});
 
 	//	call = service.getData(day);
-		call.enqueue(new Callback<EarthquakeFeedModel>() {
-
-			@Override
-			public void onResponse(Call<EarthquakeFeedModel> call, Response<EarthquakeFeedModel> response) {
-				EarthquakeFeedModel feed = response.body();
-				Optional<Earthquake> maxDay = feed.getFeatures().stream()
-						.max(Comparator.comparing(e -> e.getProperties().getMag()));
-			//	System.out.print(maxDay.get().getProperties().getMag() + "\t");
-				//System.out.println(maxDay.get().getProperties().getPlace());
-			}
-
-			@Override
-			public void onFailure(Call<EarthquakeFeedModel> call, Throwable t) {
-				t.printStackTrace();
-			}
-		});
+//		call.enqueue(new Callback<EarthquakeFeedModel>() {
+//
+//			@Override
+//			public void onResponse(Call<EarthquakeFeedModel> call, Response<EarthquakeFeedModel> response) {
+//				EarthquakeFeedModel feed = response.body();
+//				Optional<Earthquake> maxDay = feed.getFeatures().stream()
+//						.max(Comparator.comparing(e -> e.getProperties().getMag()));
+//			//	System.out.print(maxDay.get().getProperties().getMag() + "\t");
+//				//System.out.println(maxDay.get().getProperties().getPlace());
+//			}
+//
+//			@Override
+//			public void onFailure(Call<EarthquakeFeedModel> call, Throwable t) {
+//				t.printStackTrace();
+//			}
+//		});
 
 	}
 

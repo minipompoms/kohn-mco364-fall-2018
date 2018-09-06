@@ -10,11 +10,18 @@ public class Earthquake {
 		properties = new EarthquakeProperties(mag,place,time);
 	}
 	
-	public String getId() {
+	public String getId()
+	{
 		return id;
 	}
-	public EarthquakeProperties getProperties() {
+
+	public EarthquakeProperties getProperties()
+	{
 		return properties;
 	}
-	
+
+	public double getMagnitude()
+	{
+		return properties.getMag();
+	}
 }

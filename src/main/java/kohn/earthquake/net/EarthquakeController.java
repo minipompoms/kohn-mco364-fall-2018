@@ -1,42 +1,60 @@
 package kohn.earthquake.net;
 
-import java.util.Comparator;
-import java.util.Optional;
-
+import java.util.*;
 import javax.swing.text.JTextComponent;
 
 import com.google.inject.Inject;
 
+import com.google.inject.Provider;
 import kohn.earthquake.Earthquake;
 import kohn.earthquake.EarthquakeFeedModel;
-import kohn.earthquake.EarthquakeProperties;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import java.util.stream.Collectors;
 
 public class EarthquakeController {
 	private EarthquakeView view;
 	private USGSEarthquakeService service;
-	
-	
-	String month = "all_month.geojson";
-	String day = "all_day.geojson";
-	String week = "all_week.geojson";
-	String hour = "all_hour.geojson";
+
+	private Provider<EarthquakeView> viewProvider;
+	String month = "month";
+	String day = "day";
+	String week = "week";
+	String hour = "hour";
 	
 	@Inject
-	public EarthquakeController(EarthquakeView view, USGSEarthquakeService service) {
+	public EarthquakeController(EarthquakeView view, USGSEarthquakeService service, Provider<EarthquakeView> viewProvider) {
 		this.view = view;
 		this.service = service;
+		this.viewProvider = viewProvider;
 	}
-
-
 	public void refreshData() {
-		requestHour();	
-		requestDay();
-		requestWeek();
-		requestMonth();
+		service.getData(hour).enqueue(new Callback<EarthquakeFeedModel>() {
+			@Override
+			public void onResponse(Call<EarthquakeFeedModel> call, Response<EarthquakeFeedModel> response) {
+				EarthquakeFeedModel feed = response.body();
+
+				List<Earthquake> earthquakes = feed.getFeatures()
+						.stream()
+						.filter(earthquake -> earthquake.getProperties().getMag() >= 1.1)
+						.sorted(Comparator.comparing(Earthquake::getMagnitude).reversed())
+						.limit(5)
+						.collect(Collectors.toList());
+
+				viewProvider.get().setEarthquakes(earthquakes);
+
+			}
+
+			@Override
+			public void onFailure(Call<EarthquakeFeedModel> call, Throwable t) {
+				t.printStackTrace();
+			}
+		});
 	}
+
+
+
 
 
 	private void requestEarthquakeFeed(Call<EarthquakeFeedModel>call,
@@ -55,39 +73,21 @@ public class EarthquakeController {
 			}
 		});
 	}
-	
+
 	public void showLargestEarthquake(JTextComponent largestField, EarthquakeFeedModel feed) {
 
-		Optional<Earthquake> largest = feed.getFeatures()
-				.stream() //put this in earthquakefeed
-				.max(Comparator.comparing(e -> e.getProperties().getMag()));
-		
-		EarthquakeProperties properties = largest.get().getProperties();
-		
-		String largestEQ = String.valueOf(properties.getMag()+" "+properties.getPlace());
-		largestField.setText(largestEQ);
+		List<Earthquake> largest = feed.getFeatures()
+				.stream()
+				.filter(earthquake -> earthquake.getProperties().getMag() >= 1.1)
+				.sorted(Comparator.comparing(Earthquake::getMagnitude).reversed())
+				.limit(5)
+				.collect(Collectors.toList());
+
+		viewProvider.get().setEarthquakes(largest);
+
+		largestField.setText(String.valueOf(largest.get(4).getMagnitude()) + ", ");
 	}
-	
-	public void requestHour()
-	{
-		requestEarthquakeFeed(service.getData(hour),
-				view.getLastHourTextField());
-	}
-	public void requestDay()
-	{
-		requestEarthquakeFeed(service.getData(day),
-				view.getLastDayTextField());
-	}
-	
-	public void requestWeek()
-	{
-		requestEarthquakeFeed(service.getData(week),
-				view.getLastWeekTextField());
-	}
-	public void requestMonth()
-	{
-		requestEarthquakeFeed(service.getData(month),
-				view.getLastMonthTextField());
-	}
-	
+
+
+
 }
