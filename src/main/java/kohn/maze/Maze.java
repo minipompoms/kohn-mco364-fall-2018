@@ -1,368 +1,181 @@
 package kohn.maze;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Scanner;
+import java.util.Random;
 import java.util.Stack;
 
 public class Maze {
 
+    private int rows;
+    private int cols;
+    private Cell[][] maze;
+    private Stack<Cell> stack = new Stack<>();
 
-    private String[][] maze;
-    private int SZ = 0;
 
-    public Maze() {
-        maze = new String[SZ][SZ];
-        generateMaze(SZ);
+    public Maze(int rows, int cols) {
+        this.rows = rows;
+        this.cols = cols;
+        maze = new Cell[rows][cols];
     }
 
-    public String[][] generateMaze(int SZ) {
-        int padding = (SZ * 2) + 1;
-        maze = new String[padding][padding];
+    private void generateMaze() {
+        int x, y;
+        for (x = 0; x < rows; x++) {
+            for (y = 0; y < cols; y++) {
+                Cell cell = new Cell(x, y);//creates new cell with coordinates
+                maze[x][y] = cell; //assigns this cell to the 2D array
+                cell.visited = false; //cell has not been visited yet
+            }
+        }
 
-        for (int row = 0; row < padding; row++) {
-            for (int col = 0; col < padding; col++) {
-                if (col == 1 && row == 0) {
-                    maze[row][col] = "S";
+        for (x = 0; x < rows; x++) {
+            for (y = 0; y < cols; y++) {
+                assignNeighbors(maze[x][y]);
+            }
+        }
+    }
+
+    private void createPath() {
+        int x = 0;
+        int y = 0;
+        Cell cell = maze[x][y];
+
+        while (!containsUnvisitedCells()) {
+            if (removeVisitedNeighbors(cell) != 0) {
+                Cell neighbor = getRandomNeighbor(cell);
+                if(neighbor != null) {
+                    removeWalls(cell, neighbor);
+                    stack.push(cell);
+                    cell = neighbor;
+                    cell.visited = true;
                 }
-                else if (col == padding && row == 2 * SZ) {
-                    maze[row][col] = "E";
+            }
+            else {
+                cell = stack.pop();
+            }
+        }
+    }
+
+    private void assignNeighbors(Cell cell) {
+        if (cell.getY() != 0) { //assigns left cell coordinates to north cell of cell
+            cell.neighbors.add(maze[cell.getX()][cell.getY() - 1]);
+        }
+
+        if (cell.getX() != 0) { //assigns left to cell if its not the first column
+            cell.neighbors.add(maze[cell.getX() - 1][cell.getY()]);
+        }
+
+        if (cell.getX() != rows - 1) { //assigns neighbor to the right of cell if not last column
+            cell.neighbors.add(maze[cell.getX() + 1][cell.getY()]);
+        }
+
+        if (cell.getY() != cols - 1) {//bottom neighbor if not last row
+            cell.neighbors.add(maze[cell.getX()][cell.getY() + 1]);
+        }
+    }
+
+    private Cell getRandomNeighbor(Cell cell) {
+        if (cell.neighbors.size() == 0) {
+            return null;
+        }
+        Random random = new Random();
+        cell = cell.neighbors.get(random.nextInt(cell.neighbors.size()));
+
+        return cell;
+    }
+
+    private void removeWalls(Cell current, Cell neighbor) {
+        System.out.println("Remove wall between (row " + current.getX() + ", col " + current.getY() + ") &  (row " +
+                neighbor.getX() + ", col " + neighbor.getY() +")");
+        int x = current.getX();
+        int y = current.getY();
+        //bottom cell = remove south wall from current & top from neighbor
+        if (x == neighbor.getX() + 1 && y == neighbor.getY()) {
+            current.south = false;
+            neighbor.north = false;
+
+        }
+        //right cell = remove right wall from current & left from neighbor
+        else if (x == neighbor.getX() && y == neighbor.getY() + 1) {
+            current.east = false;
+            neighbor.west = false;
+        }
+        //left cell = remove left wall from current & right from neighbor
+        else if (x == neighbor.getX() && y == neighbor.getY() - 1) {
+            current.west = false;
+            neighbor.east = false;
+        }
+        //top cell = remove top from current & bottom from neighbor
+        else if (x == neighbor.getX() - 1 && y == neighbor.getY()) {
+            current.north = false;
+            neighbor.south = false;
+        }
+
+        current.neighbors.remove(neighbor);
+        neighbor.neighbors.remove(current);
+        displayMaze();
+    }
+
+    private int removeVisitedNeighbors(Cell cell) {
+        for (int i = 0; i < cell.neighbors.size(); i++) {
+            cell.neighbors.removeIf(c -> c.visited);
+        }
+        return cell.neighbors.size();
+    }
+
+    private boolean containsUnvisitedCells() {
+        int x, y;
+        for (x = 0; x < rows; x++) {
+            for (y = 0; y < cols; y++) {
+                if (!maze[x][y].visited) {
+                    return false;
                 }
-                else if (col % 2 == 0) {
-                    if (row % 2 == 0) {
-                        maze[row][col] = "+";
-                    }
-                    else {
-                        maze[row][col] = "|";
-                    }
+            }
+        }
+        return true;
+    }
+
+    private void displayMaze() {
+        int x, y;
+        StringBuilder sb = new StringBuilder();
+        sb.append("    ");
+        for (y = 0; y < cols-1; y++) {
+            sb.append("+---");
+        }
+
+        for (x = 0; x < rows; x++) {
+            for (y = 0; y < cols; y++) {
+                if (maze[y][x].north && x > 0) {
+                    sb.append("+---");
+                }
+                else if(x > 0){
+                    sb.append("+   ");
+                }
+            }
+            sb.append("+\n");
+
+            for (y = 0; y < cols; y++) {
+                if (maze[y][x].west || y == 0) {
+                    sb.append("|   ");
                 }
                 else {
-                    if (row % 2 == 0) {
-                        maze[row][col] = "-";
-                    }
-                    else {
-                        maze[row][col] = "0";
-                    }
+                    sb.append("    ");
                 }
             }
+            sb.append("|\n");
         }
-        return maze;
+
+        for (y = 0; y < cols; y++) {
+            sb.append("+---");
+        }
+        sb.append("+");
+        System.out.println(sb.toString());
     }
-
-    public void createPath(String[][] path) {
-        Stack<Cell> stack = new Stack<>();
-        int size = (path.length - 1) / 2;
-        int allCells = size * size;
-        int visited = 1;
-        Cell current = new Cell(0, 0);
-
-        while (visited < allCells) {
-            ArrayList<String> direction = new ArrayList<>();
-            Collections.addAll(direction, "N", "E", "S", "W");
-            Collections.shuffle(direction);
-
-            String random = checkNeighbors(path, current, direction);
-
-            if (random.equals("REVERSE")) {
-                current = stack.pop();
-                continue;
-            }
-            current = removeWall(path, current, random);
-            visited = visited + 1;
-            stack.push(current);
-        }
-    }
-
-    private String checkNeighbors(String[][] theMaze, Cell current, ArrayList<String> directions) {
-        int size = (theMaze.length - 1) / 2;
-        int row = 2 * current.getRow() + 1;
-        int col = 2 * current.getCol() + 1;
-
-        if (directions.size() == 0) {
-            return "REVERSE";
-        }
-        String check = directions.remove(0);
-
-        if (check.equals("N")) {
-            if (current.getCol() - 1 < 0) {
-
-                return checkNeighbors(theMaze, current, directions);
-            }
-            if ((theMaze[col - 3][row].equals("#") || theMaze[col - 1][row].equals("#"))
-                    || (theMaze[col - 2][row - 1].equals("#")  || theMaze[col - 2][row + 1].equals("#"))){
-
-                return checkNeighbors(theMaze, current, directions);
-            }
-        }
-        else if (check.equals("E")) {
-            if (current.getRow() + 1 >= size) {
-
-                return checkNeighbors(theMaze, current, directions);
-            }
-            if (((theMaze[col + 1][row + 2].equals("#") || theMaze[col - 1][row + 2].equals("#"))
-                    || (theMaze[col][row + 1].equals( "#") || theMaze[col][row + 3].equals("#")))) {
-
-                return checkNeighbors(theMaze, current, directions);
-            }
-        }
-        else if (check.equals("S")) {
-            if (current.getCol() + 1 >= size) {
-
-                return checkNeighbors(theMaze, current, directions);
-            }
-            if (((theMaze[col + 1][row].equals("#") || theMaze[col + 3][row].equals("#"))
-                    || (theMaze[col + 2][row - 1].equals("#") || theMaze[col + 2][row + 1].equals("#")))) {
-
-                return checkNeighbors(theMaze, current, directions);
-            }
-        }
-        else if (check.equals("W")) {
-            if (current.getRow() - 1 < 0) {
-
-                return checkNeighbors(theMaze, current, directions);
-            }
-            if (((theMaze[col - 1][row - 2].equals("#") || theMaze[col + 1][row - 2].equals("#"))
-                    || (theMaze[col][row - 3].equals("#") || theMaze[col][row - 1].equals("#")))) {
-
-                return checkNeighbors(theMaze, current, directions);
-            }
-        }
-        return check;
-    }
-
-
-    private Cell removeWall(String[][] theMaze, Cell current, String check) {
-
-        theMaze[1][1] = "#";
-
-        if (check.equals("N")) {
-            current.setNext(new Cell(current.getRow(), current.getCol() - 1));
-            current = current.getNext();
-            theMaze[2 * current.getCol() + 2][2 * current.getRow() + 1] = "#";
-            theMaze[2 * current.getCol() + 1][2 * current.getRow() + 1] = "#";
-
-        }
-        else if (check.equals("E")) {
-            current.setNext(new Cell(current.getRow() + 1, current.getCol()));
-            current = current.getNext();
-            theMaze[2 * current.getCol() + 1][2 * current.getRow()] = "#";
-            theMaze[2 * current.getCol() + 1][2 * current.getRow() + 1] = "#";
-
-        }
-        else if (check.equals("S")) {
-            current.setNext(new Cell(current.getRow(), current.getCol() + 1));
-            current = current.getNext();
-            theMaze[2 * current.getCol()][2 * current.getRow() + 1] = "#";
-            theMaze[2 * current.getCol() + 1][2 * current.getRow() + 1] = "#";
-
-        }
-        else if (check.equals("W")) {
-            current.setNext(new Cell(current.getRow() - 1, current.getCol()));
-            current = current.getNext();
-            theMaze[2 * current.getCol() + 1][2 * current.getRow() + 1] = "#";
-            theMaze[2 * current.getCol() + 1][2 * current.getRow() + 2] = "#";
-        }
-        return current;
-    }
-
-    private String displayPath(String[][] theMaze) {
-        StringBuilder display = new StringBuilder();
-        int sz = theMaze.length;
-
-        for (int col = 0; col < sz; col++) {
-            for (int row = 0; row < sz; row++) {
-                if (theMaze[col][row].equals("+")) {
-                    display.append("+");
-                }
-                else if (theMaze[col][row].equals("-")) {
-                    display.append("---");
-                }
-                else if (theMaze[col][row].equals("|")) {
-                    display.append("|");
-                }
-                else if (theMaze[col][row].equals("#") && col % 2 == 1) {
-                    if (row % 2 == 0) {
-                        display.append(" ");
-                    }
-                    else if (row % 2 == 1) {
-                        display.append("   ");
-                    }
-                }
-                else if (theMaze[col][row].equals("#") && col % 2 == 0) {
-                    display.append("   ");
-                }
-                else if (theMaze[col][row].equals("S") || theMaze[col][row].equals("E")) {
-                    display.append("   ");
-                }
-                else if (theMaze[col][row].equals(" ") && col % 2 == 1 && row % 2 == 0) {
-                    display.append(" ");
-                }
-                else if (theMaze[col][row].equals(" ")) {
-                    display.append("   ");
-                }
-                else {
-                    display.append(" ").append(theMaze[col][row]).append(" ");
-                }
-                if (row == (sz - 1) && col != (sz - 1)) {
-                    display.append(System.lineSeparator());
-                }
-            }
-        }
-        return display.toString();
-    }
-
-
-    private String[][] depthFirstSearch(String[][] theMaze) {
-        clearPath(theMaze);
-        Stack<Cell> location = new Stack<>();
-        int sz = (theMaze.length - 1) / 2;
-        int allCells = sz * sz;
-        int visited = 1;
-        Cell current = new Cell(0, 0);
-        theMaze[1][1] = "0";
-
-        while (visited < allCells) {
-            ArrayList<String> directions = new ArrayList<>();
-            Collections.addAll(directions, "N", "E", "S", "W");
-            Collections.shuffle(directions);
-
-            String check = isValidDirection(theMaze, current, directions);
-
-            if (check == "REVERSE") {
-                current = location.pop();
-                continue;
-            }
-            current = move(theMaze, current, check, visited);
-            visited = visited + 1;
-            location.push(current);
-
-            if (current.getRow() == sz - 1 && current.getCol() == sz - 1) {
-                return theMaze;
-            }
-        }
-
-        return theMaze;
-    }
-
-    private String[][] clearPath(String[][] theMaze) {
-        int sz = theMaze.length;
-        for (int i = 0; i < sz; i++) {
-            for (int j = 0; j < sz; j++) {
-                if (theMaze[i][j].equals("#")) {
-                    theMaze[i][j] = " ";
-                }
-            }
-        }
-        return theMaze;
-    }
-
-
-    private String isValidDirection(String[][] theMaze, Cell current, ArrayList<String> direction) {
-        int sz = (theMaze.length - 1) / 2;
-        int row = 2 * current.getRow() + 1;
-        int col = 2 * current.getCol() + 1;
-
-        if (direction.size() == 0) {
-            return "REVERSE";
-        }
-
-        String random = direction.remove(0);
-
-        if (random.equals("N")){
-            if (current.getCol() - 1 < 0) {
-                return isValidDirection(theMaze, current, direction);
-            }
-            if (!theMaze[col - 1][row].equals(" ")) {
-                return isValidDirection(theMaze, current, direction);
-            }
-        }
-        else if (random.equals("E")) {
-            if (current.getRow() + 1 >= sz) {
-                return isValidDirection(theMaze, current, direction);
-            }
-            if (!theMaze[col][row + 1].equals(" ")) {
-                return isValidDirection(theMaze, current, direction);
-            }
-        }
-        else if (random.equals("S")) {
-            if (current.getCol() + 1 >= sz) {
-                return isValidDirection(theMaze, current, direction);
-            }
-            if (!theMaze[col + 1][row].equals( " ")) {
-                return isValidDirection(theMaze, current, direction);
-            }
-        }
-        else if (random.equals("W")) {
-            if (current.getRow() - 1 < 0) {
-                return isValidDirection(theMaze, current, direction);
-            }
-            if (!theMaze[col][row - 1].equals(" ")) {
-                return isValidDirection(theMaze, current, direction);
-            }
-        }
-        return random;
-    }
-
-
-    private Cell move(String[][] theMaze, Cell current, String check, int count) {
-
-        String path = Integer.toString(count % 10);
-
-        if (check.equals("N")) {
-            current.setNext(new Cell(current.getRow(), current.getCol() - 1));
-            current = current.getNext();
-            theMaze[2 * current.getCol() + 2][2 * current.getRow() + 1] = "#";
-            theMaze[2 * current.getCol() + 1][2 * current.getRow() + 1] = path;
-
-        }
-        else if (check.equals("E")) {
-            current.setNext(new Cell(current.getRow() + 1, current.getCol()));
-            current = current.getNext();
-            theMaze[2 * current.getCol() + 1][2 * current.getRow()] = "#";
-            theMaze[2 * current.getCol() + 1][2 * current.getRow() + 1] = path;
-
-        }
-        else if (check.equals("S")) {
-            current.setNext(new Cell(current.getRow(), current.getCol() + 1));
-            current = current.getNext();
-            theMaze[2 * current.getCol()][2 * current.getRow() + 1] = "#";
-            theMaze[2 * current.getCol() + 1][2 * current.getRow() + 1] = path;
-
-        }
-        else if (check.equals("W")) {
-            current.setNext(new Cell(current.getRow() - 1, current.getCol()));
-            current = current.getNext();
-            theMaze[2 * current.getCol() + 1][2 * current.getRow() + 2] = "#";
-            theMaze[2 * current.getCol() + 1][2 * current.getRow() + 1] = path;
-        }
-        return current;
-    }
-
-
 
     public static void main(String[] args) {
-
-        Maze m = new Maze();
-
-        Scanner scan = new Scanner(System.in);
-        int size;
-
-        System.out.print("Maze size ? ");
-        size = scan.nextInt();
-
-        String[][] theMaze = m.generateMaze(size);
-        System.out.println(m.displayPath(theMaze));
-
-        m.createPath(theMaze);
-
-        System.out.println(m.displayPath(theMaze));
-
-        System.out.println();
-
-        m.depthFirstSearch(theMaze);
-        System.out.println(m.displayPath(theMaze));
-
+        Maze m = new Maze(5, 5);
+        m.generateMaze();
+        m.displayMaze();
+        m.createPath();
+        m.displayMaze();
     }
-
-
 }

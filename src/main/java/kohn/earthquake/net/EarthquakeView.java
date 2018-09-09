@@ -48,16 +48,12 @@ public class EarthquakeView extends JFrame  {
 	public static void main(String args[]) {
 		Injector injector = Guice.createInjector(new EarthquakeModule());
 		EarthquakeView view = injector.getInstance(EarthquakeView.class);
-
-
-		
 		view.setVisible(true);
 
 	}
 
     public void setEarthquakes(List<Earthquake> earthquakeData) {
         StringBuilder sb = new StringBuilder();
-
         for (int i=0; i < earthquakeData.size(); i++) {
                 EarthquakeProperties properties = earthquakeData.get(i).getProperties();
                 String eq=String.format("%n\t%-8s|%40s%n",properties.getMag(), properties.getPlace());
