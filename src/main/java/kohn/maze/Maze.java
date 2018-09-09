@@ -21,9 +21,9 @@ public class Maze {
         int x, y;
         for (x = 0; x < rows; x++) {
             for (y = 0; y < cols; y++) {
-                Cell cell = new Cell(x, y);//creates new cell with coordinates
-                maze[x][y] = cell; //assigns this cell to the 2D array
-                cell.visited = false; //cell has not been visited yet
+                Cell cell = new Cell(x, y);
+                maze[x][y] = cell;
+                cell.visited = false;
             }
         }
 
@@ -56,19 +56,19 @@ public class Maze {
     }
 
     private void assignNeighbors(Cell cell) {
-        if (cell.getY() != 0) { //assigns left cell coordinates to north cell of cell
+        if (cell.getY() != 0) { //assigns left neighbor
             cell.neighbors.add(maze[cell.getX()][cell.getY() - 1]);
         }
 
-        if (cell.getX() != 0) { //assigns left to cell if its not the first column
+        if (cell.getX() != 0) { //assigns top row
             cell.neighbors.add(maze[cell.getX() - 1][cell.getY()]);
         }
 
-        if (cell.getX() != rows - 1) { //assigns neighbor to the right of cell if not last column
+        if (cell.getX() != rows - 1) { //assigns south cell
             cell.neighbors.add(maze[cell.getX() + 1][cell.getY()]);
         }
 
-        if (cell.getY() != cols - 1) {//bottom neighbor if not last row
+        if (cell.getY() != cols - 1) {//east cell
             cell.neighbors.add(maze[cell.getX()][cell.getY() + 1]);
         }
     }
@@ -88,7 +88,7 @@ public class Maze {
                 neighbor.getX() + ", col " + neighbor.getY() +")");
         int x = current.getX();
         int y = current.getY();
-        //bottom cell = remove south wall from current & top from neighbor
+        // remove south wall from current & top from neighbor
         if (x == neighbor.getX() + 1 && y == neighbor.getY()) {
             current.south = false;
             neighbor.north = false;
@@ -137,24 +137,21 @@ public class Maze {
     private void displayMaze() {
         int x, y;
         StringBuilder sb = new StringBuilder();
-        sb.append("    ");
-        for (y = 0; y < cols-1; y++) {
-            sb.append("+---");
-        }
+
 
         for (x = 0; x < rows; x++) {
             for (y = 0; y < cols; y++) {
-                if (maze[y][x].north && x > 0) {
+                if (maze[x][y].north ) {
                     sb.append("+---");
                 }
-                else if(x > 0){
+                else {
                     sb.append("+   ");
                 }
             }
             sb.append("+\n");
 
             for (y = 0; y < cols; y++) {
-                if (maze[y][x].west || y == 0) {
+                if (maze[x][y].west ) {
                     sb.append("|   ");
                 }
                 else {
@@ -168,6 +165,7 @@ public class Maze {
             sb.append("+---");
         }
         sb.append("+");
+        System.out.println();
         System.out.println(sb.toString());
     }
 
