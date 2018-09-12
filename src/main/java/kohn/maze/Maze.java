@@ -9,6 +9,7 @@ public class Maze {
     private int cols;
     private Cell[][] maze;
     private Stack<Cell> stack = new Stack<>();
+    private final Random RANDOM = new Random();
 
 
     public Maze(int rows, int cols) {
@@ -23,7 +24,6 @@ public class Maze {
             for (y = 0; y < cols; y++) {
                 Cell cell = new Cell(x, y);
                 maze[x][y] = cell;
-                cell.visited = false;
             }
         }
 
@@ -39,7 +39,7 @@ public class Maze {
         int y = 0;
         Cell cell = maze[x][y];
 
-        while (!containsUnvisitedCells()) {
+        while (containsUnvisitedCells()) {
             if (removeVisitedNeighbors(cell) != 0) {
                 Cell neighbor = getRandomNeighbor(cell);
                 if(neighbor != null) {
@@ -56,19 +56,19 @@ public class Maze {
     }
 
     private void assignNeighbors(Cell cell) {
-        if (cell.getY() != 0) { //assigns left neighbor
+        if (cell.getY() != 0) { //assign left neighbor
             cell.neighbors.add(maze[cell.getX()][cell.getY() - 1]);
         }
 
-        if (cell.getX() != 0) { //assigns top row
+        if (cell.getX() != 0) { //assign top neighbor
             cell.neighbors.add(maze[cell.getX() - 1][cell.getY()]);
         }
 
-        if (cell.getX() != rows - 1) { //assigns south cell
+        if (cell.getX() != rows - 1) { //assign south neighbor
             cell.neighbors.add(maze[cell.getX() + 1][cell.getY()]);
         }
 
-        if (cell.getY() != cols - 1) {//east cell
+        if (cell.getY() != cols - 1) {//assign east neighbor
             cell.neighbors.add(maze[cell.getX()][cell.getY() + 1]);
         }
     }
@@ -77,8 +77,7 @@ public class Maze {
         if (cell.neighbors.size() == 0) {
             return null;
         }
-        Random random = new Random();
-        cell = cell.neighbors.get(random.nextInt(cell.neighbors.size()));
+        cell = cell.neighbors.get(RANDOM.nextInt(cell.neighbors.size()));
 
         return cell;
     }
@@ -92,7 +91,6 @@ public class Maze {
         if (x == neighbor.getX() + 1 && y == neighbor.getY()) {
             current.south = false;
             neighbor.north = false;
-
         }
         //right cell = remove right wall from current & left from neighbor
         else if (x == neighbor.getX() && y == neighbor.getY() + 1) {
@@ -109,7 +107,6 @@ public class Maze {
             current.north = false;
             neighbor.south = false;
         }
-
         current.neighbors.remove(neighbor);
         neighbor.neighbors.remove(current);
         displayMaze();
@@ -123,25 +120,23 @@ public class Maze {
     }
 
     private boolean containsUnvisitedCells() {
-        int x, y;
-        for (x = 0; x < rows; x++) {
-            for (y = 0; y < cols; y++) {
+        for (int x = 0; x < rows; x++) {
+            for (int y = 0; y < cols; y++) {
                 if (!maze[x][y].visited) {
-                    return false;
+                    return true;
                 }
             }
         }
-        return true;
+        return false;
     }
 
     private void displayMaze() {
         int x, y;
         StringBuilder sb = new StringBuilder();
 
-
         for (x = 0; x < rows; x++) {
             for (y = 0; y < cols; y++) {
-                if (maze[x][y].north ) {
+                if (maze[y][x].north ) {
                     sb.append("+---");
                 }
                 else {
@@ -151,7 +146,10 @@ public class Maze {
             sb.append("+\n");
 
             for (y = 0; y < cols; y++) {
-                if (maze[x][y].west ) {
+//                if(y == 0){
+//                    sb.append("|   ");
+//                }
+                if (maze[y][x].west) {
                     sb.append("|   ");
                 }
                 else {
@@ -170,7 +168,7 @@ public class Maze {
     }
 
     public static void main(String[] args) {
-        Maze m = new Maze(5, 5);
+        Maze m = new Maze(4, 4);
         m.generateMaze();
         m.displayMaze();
         m.createPath();
