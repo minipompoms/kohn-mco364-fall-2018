@@ -56,6 +56,7 @@ public class Maze {
     }
 
     private void assignNeighbors(Cell cell) {
+
         if (cell.getY() != 0) { //assign left neighbor
             cell.neighbors.add(maze[cell.getX()][cell.getY() - 1]);
         }
@@ -83,29 +84,28 @@ public class Maze {
     }
 
     private void removeWalls(Cell current, Cell neighbor) {
-        System.out.println("Remove wall between (row " + current.getX() + ", col " + current.getY() + ") &  (row " +
-                neighbor.getX() + ", col " + neighbor.getY() +")");
+       /* System.out.println("Remove wall between (row " + current.getX() + ", col " + current.getY() + ") &  (row " +
+                neighbor.getX() + ", col " + neighbor.getY() +")");*/
         int x = current.getX();
         int y = current.getY();
-        // remove south wall from current & top from neighbor
         if (x == neighbor.getX() + 1 && y == neighbor.getY()) {
-            current.south = false;
-            neighbor.north = false;
+            current.north = false;
+            neighbor.south = false;
         }
-        //right cell = remove right wall from current & left from neighbor
+        //east neighbor
         else if (x == neighbor.getX() && y == neighbor.getY() + 1) {
-            current.east = false;
-            neighbor.west = false;
-        }
-        //left cell = remove left wall from current & right from neighbor
-        else if (x == neighbor.getX() && y == neighbor.getY() - 1) {
             current.west = false;
             neighbor.east = false;
         }
-        //top cell = remove top from current & bottom from neighbor
+        //west neighbor
+        else if (x == neighbor.getX() && y == neighbor.getY() - 1) {
+            current.east = false;
+            neighbor.west = false;
+        }
+        //north neighbor
         else if (x == neighbor.getX() - 1 && y == neighbor.getY()) {
-            current.north = false;
-            neighbor.south = false;
+            current.south = false;
+            neighbor.north = false;
         }
         current.neighbors.remove(neighbor);
         neighbor.neighbors.remove(current);
@@ -113,9 +113,7 @@ public class Maze {
     }
 
     private int removeVisitedNeighbors(Cell cell) {
-        for (int i = 0; i < cell.neighbors.size(); i++) {
-            cell.neighbors.removeIf(c -> c.visited);
-        }
+        cell.neighbors.removeIf(c -> c.visited);
         return cell.neighbors.size();
     }
 
@@ -136,7 +134,7 @@ public class Maze {
 
         for (x = 0; x < rows; x++) {
             for (y = 0; y < cols; y++) {
-                if (maze[y][x].north ) {
+                if (maze[x][y].north ) {
                     sb.append("+---");
                 }
                 else {
@@ -149,7 +147,7 @@ public class Maze {
 //                if(y == 0){
 //                    sb.append("|   ");
 //                }
-                if (maze[y][x].west) {
+                if (maze[x][y].west) {
                     sb.append("|   ");
                 }
                 else {
