@@ -3,7 +3,6 @@ package kohn.rx;
 
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 public class RxSample {
     public static void main(String[] args) {
@@ -17,15 +16,19 @@ public class RxSample {
             }
         });*/
 
-        Observable<Integer> observable = Observable.just(1,3,4,2,5);
+         Observable<Integer> observable = Observable.just(1,3,4,2,5,4,7,4);
 
         Disposable disposable = observable
                 .filter(integer -> integer % 2 == 0)
+                .map(integer -> integer * 2)
                 .sorted()
-                .subscribeOn(Schedulers.computation())
-                .observeOn(Schedulers.single())
+                .distinct()
+                .count()
+                //.subscribeOn(Schedulers.computation())
+                //.observeOn(Schedulers.single())
                 .subscribe(System.out::println);
 
+        //only dispose when finished.
         disposable.dispose();
     }
 }

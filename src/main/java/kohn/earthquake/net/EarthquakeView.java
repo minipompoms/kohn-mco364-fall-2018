@@ -1,6 +1,8 @@
 package kohn.earthquake.net;
 
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -20,7 +22,6 @@ import kohn.earthquake.EarthquakeProperties;
 public class EarthquakeView extends JFrame  {
 
 	private JTextArea earthquakes;
-    public Timer timer;
 
     @Inject
     public EarthquakeView(EarthquakeController controller) {
@@ -34,14 +35,19 @@ public class EarthquakeView extends JFrame  {
 		pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
         earthquakes = new JTextArea();
         pane.add(earthquakes);
-        add(pane);
+
 		Border border = BorderFactory.createEmptyBorder(20, 20, 20, 20);
         pane.setBorder(border);
+        add(pane);
 
-        timer = new Timer(30_000,(event) -> controller.refreshData());
-        timer.setInitialDelay(0);
-        timer.start();
-		
+        controller.refreshData();
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                controller.stop();
+            }
+        });
+
 	}
 
 
