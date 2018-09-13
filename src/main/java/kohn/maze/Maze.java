@@ -144,9 +144,6 @@ public class Maze {
             sb.append("+\n");
 
             for (y = 0; y < cols; y++) {
-//                if(y == 0){
-//                    sb.append("|   ");
-//                }
                 if (maze[x][y].west) {
                     sb.append("|   ");
                 }
