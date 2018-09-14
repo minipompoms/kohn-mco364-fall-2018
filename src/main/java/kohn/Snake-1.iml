@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <output url="file://$USER_HOME$/eclipse-workspace/Snake-1/bin" />
+    <exclude-output />
+    <content url="file://$USER_HOME$/eclipse-workspace/Snake-1">
+      <sourceFolder url="file://$USER_HOME$/eclipse-workspace/Snake-1/Snake" isTestSource="false" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>
