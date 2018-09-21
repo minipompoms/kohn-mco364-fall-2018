@@ -1,114 +1,71 @@
 package kohn.rx.votesmart;
 
-import java.util.ArrayList;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import io.reactivex.Observable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
-import javax.swing.text.JTextComponent;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class VoteSmartController {
-	private VoteSmartView view;
+
+    private Provider<VoteSmartView> viewProvider;
 	private VoteSmartService service;
-	
-	public VoteSmartController(VoteSmartView view, VoteSmartService service) {
-		this.view = view;
+	private Disposable disposable;
+
+	@Inject
+	public VoteSmartController(VoteSmartService service, Provider<VoteSmartView> viewProvider) {
+		this.viewProvider = viewProvider;
 		this.service = service;
 	}
-	
-	private void showBillsData(JTextComponent data, VoteSmartModel feed) {
-		ArrayList<String> voteSmartFeed = new ArrayList<>();
-		StringBuilder sb = new StringBuilder();
-			feed.getBills()
-				.getBill()
-				.stream()
-				.forEach(e -> voteSmartFeed.add(e.toString()));
-			int size = voteSmartFeed.size();
-			for(int i =0; i<size; i++) {
-				sb.append("\n").append(voteSmartFeed.get(i));
-			}
-		data.setText(sb.toString());
-	}
-	
-	
-	private void showCandidateData(JTextComponent data, VoteSmartModel feed) {
-		ArrayList<String> voteSmartFeed = new ArrayList<>();
-		StringBuilder sb = new StringBuilder();
-			
-			feed.getCandidateList()
-				.getCandidate()
-				.stream()
-				.forEach(e -> voteSmartFeed.add(e.toString()));
-			int size = voteSmartFeed.size();
-			for(int i =0; i<size; i++) {
-				sb.append("\n").append(voteSmartFeed.get(i));
-			}
-		data.setText(sb.toString());
-	}
-	
-	private void showElectionData(JTextComponent data, VoteSmartModel feed) {
-		StringBuilder sb = new StringBuilder();
-		sb.append(feed.getElections().toString());	
+/*
 
-		data.setText(sb.toString());
-	}
-	
-	private void showStateOfficialsData(JTextComponent data, VoteSmartModel feed) {
-		ArrayList<String> voteSmartFeed = new ArrayList<>();
-		StringBuilder sb = new StringBuilder();
-			feed.getCandidateList()
-				.getCandidate()
-				.stream()
-				.forEach(e -> voteSmartFeed.add(e.toString()));
-			int size = voteSmartFeed.size();
-			for(int i =0; i<size; i++) {
-				sb.append("\n").append(voteSmartFeed.get(i));
-			}
-		data.setText(sb.toString());		
-	}
-	
-	private void requestVoteSmartData(Call<VoteSmartModel> call, JTextComponent data, String type) {
-		 call.enqueue(new Callback<VoteSmartModel>() {
-			@Override
-			public void onResponse(Call<VoteSmartModel> call, Response<VoteSmartModel> response) {
-				VoteSmartModel feed = response.body();
 
-				if(type.contains("1")) {
-					showCandidateData(data, feed);		
-				}
-				if(type.contains("2")) {
-					showElectionData(data, feed);
-				}
-				if(type.contains("3")) {
-					showBillsData(data, feed);
-				}
-				if(type.contains("4")) {
-					showStateOfficialsData(data, feed);
-				}			
-			}
-			@Override
-			public void onFailure(Call<VoteSmartModel> call, Throwable t) {
-				t.printStackTrace();
-			}			
-		});	
-	}
+    public void refreshCatagories(){
+        disposable = Observable.interval(0,10, TimeUnit.SECONDS)
+                .flatMap(aLong -> service.getRecentBills())
+                .map(feed -> feed.getBillsList())
+                .subscribeOn(Schedulers.io())
+                .subscribe(this::setBills, throwable -> throwable.printStackTrace());
+    }
+
+*/
+
+
+    public void loadStates(){
+        disposable = Observable.interval(0,100, TimeUnit.DAYS)
+                .flatMap(aLong -> service.getStateIDs())
+                .map(feed -> feed.getStateList())
+                .subscribeOn(Schedulers.io())
+                .subscribe(this::setStateList, throwable -> throwable.printStackTrace());
+    }
+
+    private void setStateList(StateList list){
+	    List<InternalList.State> states = list
+                .getList()
+                .getState()
+                .stream()
+                .limit(55)
+                .collect(Collectors.toList());
+               viewProvider.get().setStates(states);
+    }
+   /* private void setBills(List<Bill> list){
+       List<Bill> bills = list
+               .stream()
+               .filter(bill -> bill.getBillNumber().startsWith("2"))
+               .collect(Collectors.toList());
+        viewProvider.get().setData(bills);
+
+    }
+*/
+    public void stop() {
+        disposable.dispose();
+    }
 
 	
-	public void requestCandidateData(){
-		requestVoteSmartData(service.getCandidatesbyZipCode(view.getZip5(), view.getZip4()), view.getResults(), "1");
-	}
-	
-	public void requestElectionData() {		
-		requestVoteSmartData(service.getElectionByZip(view.getZip5(), view.getZip4()), view.getResults(),"2");				
-	}
-	
-	public void requestBillsData() {
-		requestVoteSmartData(service.getBillsByState(view.getYear(), view.getStateID()), view.getResults(), "3");
-	}
-	
-	public void requestStateOfficialsData() {
-		requestVoteSmartData(service.getStateOfficials(view.getStateID()), view.getResults(),"4");
-	}
+
 }

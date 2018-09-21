@@ -1,8 +1,8 @@
 package kohn.rx.votesmart;
 
-import java.util.ArrayList;
-
 import kohn.rx.votesmart.InternalList.State.GeneralInfo;
+
+import java.util.ArrayList;
 
 public class StateList {
 

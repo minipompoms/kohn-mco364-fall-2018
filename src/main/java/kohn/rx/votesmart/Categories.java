@@ -1,12 +1,13 @@
 package kohn.rx.votesmart;
 
-import java.util.ArrayList;
+import java.util.List;
 
 
 public class Categories {
-	private ArrayList<Category> category;
 
-	public ArrayList<Category> getCategory() {
+	private List<Category> category;
+
+	public List<Category> getCategory() {
 		return category;
 	}
 
