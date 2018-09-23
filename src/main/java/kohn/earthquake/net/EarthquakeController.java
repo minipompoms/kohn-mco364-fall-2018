@@ -1,91 +1,57 @@
 package kohn.earthquake.net;
 
-import java.util.*;
-import javax.swing.text.JTextComponent;
-
 import com.google.inject.Inject;
-
 import com.google.inject.Provider;
+import io.reactivex.Observable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import kohn.earthquake.Earthquake;
-import kohn.earthquake.EarthquakeFeedModel;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class EarthquakeController {
-	private USGSEarthquakeService service;
+    private USGSEarthquakeService service;
 
-	private Provider<EarthquakeView> viewProvider;
-	String month = "month";
-	String day = "day";
-	String week = "week";
-	String hour = "hour";
-	
-	@Inject
-	public EarthquakeController(USGSEarthquakeService service, Provider<EarthquakeView> viewProvider) {
-		this.service = service;
-		this.viewProvider = viewProvider;
-	}
-	public void refreshData() {
-		service.getData(day).enqueue(new Callback<EarthquakeFeedModel>() {
-			@Override
-			public void onResponse(Call<EarthquakeFeedModel> call, Response<EarthquakeFeedModel> response) {
-				EarthquakeFeedModel feed = response.body();
+    private Provider<EarthquakeView> viewProvider;
+    private static String month = "month";
+    private static String day = "day";
+    private static String week = "week";
+    private static String hour = "hour";
+    private static Disposable disposable;
 
-				List<Earthquake> earthquakes = feed.getFeatures()
-						.stream()
-						.filter(earthquake -> earthquake.getProperties().getMag() >= 1.1)
-						.sorted(Comparator.comparing(Earthquake::getMagnitude).reversed())
-						.limit(5)
-						.collect(Collectors.toList());
+    @Inject
+    public EarthquakeController(USGSEarthquakeService service, Provider<EarthquakeView> viewProvider) {
+        this.service = service;
+        this.viewProvider = viewProvider;
+    }
 
-				viewProvider.get().setEarthquakes(earthquakes);
+    public void refreshData() { //observable simplifies cause no call object
+        disposable =
+                Observable.interval(0, 30, TimeUnit.SECONDS)
+                        .flatMap(aLong -> service.getData(day))
+                        .map(feed -> feed.getFeatures())
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(Schedulers.single())
+                        .subscribe(this::setEarthquakes, throwable -> throwable.printStackTrace());
+    }
 
-			}
-
-			@Override
-			public void onFailure(Call<EarthquakeFeedModel> call, Throwable t) {
-				t.printStackTrace();
-			}
-		});
-	}
+    private void setEarthquakes(List<Earthquake> list) {
+        List<Earthquake> earthquakes = list
+                .stream()
+                .filter((earthquake -> earthquake.getProperties().getMag() >= 3.0))
+                .sorted((e1, e2) -> e1.getMagnitude() > e2.getMagnitude() ? -1 : 1)
+                .limit(5)
+                .collect(Collectors.toList());
 
 
+        viewProvider.get().setEarthquakes(earthquakes);
+    }
 
 
-
-	private void requestEarthquakeFeed(Call<EarthquakeFeedModel>call,
-			JTextComponent largestField) {	
-		
-		call.enqueue(new Callback<EarthquakeFeedModel>() {
-
-			@Override
-			public void onResponse(Call<EarthquakeFeedModel> call, Response<EarthquakeFeedModel> response) {
-				EarthquakeFeedModel feed = response.body();
-				showLargestEarthquake(largestField, feed);				
-			}
-			@Override
-			public void onFailure(Call<EarthquakeFeedModel> call, Throwable t) {
-				t.printStackTrace();
-			}
-		});
-	}
-
-	public void showLargestEarthquake(JTextComponent largestField, EarthquakeFeedModel feed) {
-
-		List<Earthquake> largest = feed.getFeatures()
-				.stream()
-				.filter(earthquake -> earthquake.getProperties().getMag() >= 1.1)
-				.sorted(Comparator.comparing(Earthquake::getMagnitude).reversed())
-				.limit(5)
-				.collect(Collectors.toList());
-
-		viewProvider.get().setEarthquakes(largest);
-
-		largestField.setText(String.valueOf(largest.get(4).getMagnitude()) + ", ");
-	}
-
-
+    public void stop() {
+        disposable.dispose();
+    }
 
 }
