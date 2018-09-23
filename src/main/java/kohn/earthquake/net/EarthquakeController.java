@@ -1,22 +1,13 @@
 package kohn.earthquake.net;
 
-import java.util.*;
-import javax.swing.text.JTextComponent;
-
 import com.google.inject.Inject;
-
 import com.google.inject.Provider;
 import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import kohn.earthquake.Earthquake;
-import kohn.earthquake.EarthquakeFeedModel;
-import kohn.earthquake.EarthquakeProperties;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -24,11 +15,11 @@ public class EarthquakeController {
     private USGSEarthquakeService service;
 
     private Provider<EarthquakeView> viewProvider;
-    String month = "month";
-    String day = "day";
-    String week = "week";
-    String hour = "hour";
-    Disposable disposable;
+    private static String month = "month";
+    private static String day = "day";
+    private static String week = "week";
+    private static String hour = "hour";
+    private static Disposable disposable;
 
     @Inject
     public EarthquakeController(USGSEarthquakeService service, Provider<EarthquakeView> viewProvider) {
