@@ -16,7 +16,7 @@ public class VoteSmartFeed extends AbstractModule {
 	private Categories categories;
 	private List<Bill> billList;
 
-
+	
 	@Inject
 	public VoteSmartFeed(CandidateList candidateList, StateList stateList,
 						 Bills bills, Elections elections, List<Candidate> candidates, Categories categories, List<Bill> billList ) {
@@ -33,11 +33,11 @@ public class VoteSmartFeed extends AbstractModule {
 	public CandidateList getCandidateList() {
 		return candidateList;
 	}
-
+	
 	public StateList getStateList() {
 		return stateList;
 	}
-
+	
 	public Bills getBills() {
 		return bills;
 	}

@@ -14,58 +14,84 @@ import java.util.stream.Collectors;
 public class VoteSmartController {
 
     private Provider<VoteSmartView> viewProvider;
-	private VoteSmartService service;
-	private Disposable disposable;
+    private VoteSmartService service;
+    private Disposable disposable;
 
-	@Inject
-	public VoteSmartController(VoteSmartService service, Provider<VoteSmartView> viewProvider) {
-		this.viewProvider = viewProvider;
-		this.service = service;
-	}
-/*
-
-
-    public void refreshCatagories(){
-        disposable = Observable.interval(0,10, TimeUnit.SECONDS)
-                .flatMap(aLong -> service.getRecentBills())
-                .map(feed -> feed.getBillsList())
-                .subscribeOn(Schedulers.io())
-                .subscribe(this::setBills, throwable -> throwable.printStackTrace());
+    @Inject
+    public VoteSmartController(VoteSmartService service, Provider<VoteSmartView> viewProvider) {
+        this.viewProvider = viewProvider;
+        this.service = service;
     }
 
-*/
-
-
-    public void loadStates(){
-        disposable = Observable.interval(0,100, TimeUnit.DAYS)
+    public void loadStates() {
+        disposable = Observable.interval(0, 30, TimeUnit.SECONDS)
                 .flatMap(aLong -> service.getStateIDs())
                 .map(feed -> feed.getStateList())
                 .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.single())
                 .subscribe(this::setStateList, throwable -> throwable.printStackTrace());
     }
 
-    private void setStateList(StateList list){
-	    List<InternalList.State> states = list
+    private void setStateList(StateList list) {
+        List<InternalList.State> states = list
                 .getList()
                 .getState()
                 .stream()
-                .limit(55)
+                .filter((state -> state.getStateId().startsWith("N")))
+                .limit(10)
                 .collect(Collectors.toList());
-               viewProvider.get().setStates(states);
+        viewProvider.get().setStates(states);
     }
-   /* private void setBills(List<Bill> list){
-       List<Bill> bills = list
-               .stream()
-               .filter(bill -> bill.getBillNumber().startsWith("2"))
-               .collect(Collectors.toList());
-        viewProvider.get().setData(bills);
+
+    public void refreshBills() {
+        disposable = Observable.interval(0, 10, TimeUnit.SECONDS)
+                .flatMap(aLong -> service.getRecentBills())
+                .map(feed -> feed.getBills().getBill())
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.single())
+                .subscribe(this::setBills, throwable -> throwable.printStackTrace());
+    }
+
+
+    public void refreshElections() {
+
+        disposable = Observable.interval(0, 10, TimeUnit.SECONDS)
+                .flatMap(aLong -> service.getElectionByZip("11230", "3341"))
+                .map(feed -> feed.getElections().getElection())
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.single())
+                .subscribe(this::setElections, throwable -> throwable.printStackTrace());
+    }
+
+    private void setElections(List<Elections.Election> list) {
+       System.out.println(list.get(0));
+
+        List<Elections.Election> elections = list
+                .stream()
+                .distinct()
+                .collect(Collectors.toList());
+        System.out.println(elections.get(0));
+
+        viewProvider.get().setElections(elections);
 
     }
-*/
+
+
+    private void setBills(List<Bill> list) {
+        List<Bill> bills = list
+                .stream()
+                .filter(bill -> bill.getBillNumber().startsWith("2"))
+                .collect(Collectors.toList());
+
+
+        viewProvider.get().setBills(bills);
+
+    }
+
+
     public void stop() {
         disposable.dispose();
     }
 
-	
 
 }
