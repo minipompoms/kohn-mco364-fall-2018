@@ -8,6 +8,8 @@ import java.util.Stack;
 
 public class Maze extends JComponent {
 
+
+
     private int rows;
     private int cols;
     private Cell[][] maze;
@@ -23,6 +25,7 @@ public class Maze extends JComponent {
 
     public void generateMaze() {
         int x, y;
+
         for (x = 0; x < rows; x++) {
             for (y = 0; y < cols; y++) {
                 Cell cell = new Cell(x, y);
@@ -36,10 +39,11 @@ public class Maze extends JComponent {
             }
         }
 
+
     }
 
 
-    private void createPath() {
+    protected void createPath() {
         int x = 0;
         int y = 0;
         Cell cell = maze[x][y];
@@ -57,6 +61,7 @@ public class Maze extends JComponent {
                 cell = stack.pop();
             }
         }
+
     }
 
     private void assignNeighbors(Cell cell) {
@@ -132,19 +137,18 @@ public class Maze extends JComponent {
         return false;
     }
 
-    public void paint(Graphics g) {
+
+    public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-
-        paintCells(g2);
-      //  createPath();
-      //  paintGrid(g2);
-
-        //displayMaze();
+        paintBorder(g2, Color.black);
+      paintCells(g2);
+      createPath();
+      paintGrid(g2);
     }
 
+    public void paintCells(Graphics g) {
 
-    public final void paintCells(final Graphics g) {
         Color grey = new Color(180, 180, 180);
         Graphics2D g2 = (Graphics2D) g;
         BasicStroke bs = new BasicStroke(3, 1, BasicStroke.CAP_ROUND);
@@ -154,10 +158,9 @@ public class Maze extends JComponent {
 
         int cellWidth = getWidth() / rows;
         int cellHeight = getHeight() / cols;
-        int x = 0;
-        int y = 0;
+        int x;
+        int y;
 
-        g.drawRect(x, y, cellWidth * x, cellHeight * y);
 
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
@@ -181,7 +184,7 @@ public class Maze extends JComponent {
         }
     }
 
-    public final void paintGrid(final Graphics g) {
+    public void paintGrid(Graphics g) {
         int cellWidth = getWidth() / rows;
         int cellHeight = getHeight() / cols;
         int x, y;
@@ -207,7 +210,24 @@ public class Maze extends JComponent {
         }
     }
 
-    private void displayMaze() {
+    public void paintBorder(Graphics g, Color c) {
+        Graphics2D g2 = (Graphics2D) g;
+        BasicStroke bs = new BasicStroke(17, 2, BasicStroke.CAP_ROUND);
+        g2.setColor(c);
+        g2.setStroke(bs);
+        //    g2.drawRect(1, 1, getWidth() - 1, getHeight());
+
+    }
+
+    public int getRows() {
+        return rows;
+    }
+
+    public int getCols() {
+        return cols;
+    }
+
+    protected void displayMaze() {
 
         StringBuilder sb = new StringBuilder();
 
