@@ -18,7 +18,9 @@ public class Maze {
         maze = new Cell[rows][cols];
     }
 
-    private void generateMaze() {
+
+
+    public void generateMaze() {
         int x, y;
         for (x = 0; x < rows; x++) {
             for (y = 0; y < cols; y++) {
@@ -34,7 +36,7 @@ public class Maze {
         }
     }
 
-    private void createPath() {
+    public void createPath() {
         int x = 0;
         int y = 0;
         Cell cell = maze[x][y];
@@ -128,6 +130,13 @@ public class Maze {
         return false;
     }
 
+    public int getRows() {
+        return rows;
+    }
+
+    public int getCols() {
+        return cols;
+    }
     private void displayMaze() {
         int x, y;
         StringBuilder sb = new StringBuilder();
