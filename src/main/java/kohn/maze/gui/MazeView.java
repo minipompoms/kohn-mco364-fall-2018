@@ -1,34 +1,29 @@
 package kohn.maze.gui;
 
-import kohn.maze.Cell;
 import kohn.maze.Maze;
 
 import javax.swing.*;
 import java.awt.*;
+
 public class MazeView extends JComponent {
 
-    Maze maze;
+    Maze maze = new Maze(4, 4);
 
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        maze = new Maze(5, 5);
-        g2.setColor(Color.GREEN);
+
 
         BasicStroke wideStroke = new BasicStroke(4.5f);
         g2.setStroke(wideStroke);
-        g2.drawRect(0, 1, 390, 500);
-
+        paintBorder(g2, Color.black);
 
         maze.generateMaze();
+        paintCells(g2);
         maze.createPath();
         System.out.println(maze.toString());
-        //  paintBorder(g2, Color.black);
-        // paintCells(g2);
-        //   paintGrid(g2);
-
-
+        paintGrid(g2);
     }
 
 
@@ -44,7 +39,6 @@ public class MazeView extends JComponent {
 
         int x = 0;
         int y = 0;
-        //   Maze maze = new Maze(x, y);
         Graphics2D g2 = (Graphics2D) g;
 
         Color grey = new Color(180, 180, 180);
@@ -82,11 +76,9 @@ public class MazeView extends JComponent {
     }
 
 
-    public void paintGrid(Graphics g){
+    public void paintGrid(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
-        int x = 0;
-        int y = 0;
-        //  Maze maze = new Maze(x, y);
+
         Color grey = new Color(180, 180, 180);
         BasicStroke bs = new BasicStroke(3, 1, BasicStroke.CAP_ROUND);
         g2.setStroke(bs);
@@ -95,30 +87,28 @@ public class MazeView extends JComponent {
         int cellWidth = getWidth() / maze.getRows();
         int cellHeight = getHeight() / maze.getCols();
 
-        for (x = 0; x < maze.getRows(); x++) {
-            for (y = 0; y < maze.getCols(); y++) {
+        for (int x = 0; x < maze.getRows(); x++) {
+            for (int y = 0; y < maze.getCols(); y++) {
                 g.setColor(grey);
                 g.drawLine(x * cellWidth, 0, x * cellWidth, maze.getRows() * cellWidth);
             }
         }
 
         g.setColor(Color.black);
-        for (
-                int row = 0; row < maze.getRows(); row++) {
+        for (int row = 0; row < maze.getRows(); row++) {
             for (int col = 0; col < maze.getCols(); col++) {
-                x = col * cellWidth;
-                y = row * cellHeight;
-                Cell cell = new Cell(row, col);
-                if (cell.isNorth()) {
+                int x = col * cellWidth;
+                int y = row * cellHeight;
+                if (maze.getNorthCell(row, col)) {
                     g.drawLine(x, y, x + cellWidth, y);
                 }
-                if (cell.isSouth()) {
+                if (maze.getSouthCell(row, col)) {
                     g.drawLine(x + cellWidth, y + cellHeight, x, y + cellHeight);
                 }
-                if (cell.isEast()) {
+                if (maze.getEastCell(row, col)) {
                     g.drawLine(x + cellWidth, y + cellHeight, x + cellWidth, y);
                 }
-                if (cell.isWest()) {
+                if (maze.getWestCell(row, col)) {
                     g.drawLine(x, y, x, y + cellHeight);
                 }
             }

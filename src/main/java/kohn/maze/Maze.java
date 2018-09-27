@@ -19,7 +19,6 @@ public class Maze {
     }
 
 
-
     public void generateMaze() {
         int x, y;
         for (x = 0; x < rows; x++) {
@@ -44,7 +43,7 @@ public class Maze {
         while (containsUnvisitedCells()) {
             if (removeVisitedNeighbors(cell) != 0) {
                 Cell neighbor = getRandomNeighbor(cell);
-                if(neighbor != null) {
+                if (neighbor != null) {
                     removeWalls(cell, neighbor);
                     stack.push(cell);
                     cell = neighbor;
@@ -111,7 +110,6 @@ public class Maze {
         }
         current.neighbors.remove(neighbor);
         neighbor.neighbors.remove(current);
-        displayMaze();
     }
 
     private int removeVisitedNeighbors(Cell cell) {
@@ -137,13 +135,30 @@ public class Maze {
     public int getCols() {
         return cols;
     }
-    private void displayMaze() {
+
+    public boolean getNorthCell(int x, int y) {
+        return maze[x][y].north;
+    }
+
+    public boolean getSouthCell(int x, int y) {
+        return maze[x][y].south;
+    }
+
+    public boolean getEastCell(int x, int y) {
+        return maze[x][y].east;
+    }
+
+    public boolean getWestCell(int x, int y) {
+        return maze[x][y].west;
+    }
+
+    public String toString() {
         int x, y;
         StringBuilder sb = new StringBuilder();
 
         for (x = 0; x < rows; x++) {
             for (y = 0; y < cols; y++) {
-                if (maze[x][y].north ) {
+                if (maze[x][y].north) {
                     sb.append("+---");
                 }
                 else {
@@ -167,15 +182,10 @@ public class Maze {
             sb.append("+---");
         }
         sb.append("+");
-        System.out.println();
-        System.out.println(sb.toString());
+        return (sb.toString());
     }
 
     public static void main(String[] args) {
-        Maze m = new Maze(4, 4);
-        m.generateMaze();
-        m.displayMaze();
-        m.createPath();
-        m.displayMaze();
+
     }
 }

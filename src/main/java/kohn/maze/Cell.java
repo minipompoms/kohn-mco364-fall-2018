@@ -12,21 +12,6 @@ public class Cell {
     protected boolean north;
     protected boolean south;
 
-    public boolean isNorth() {
-        return north;
-    }
-
-    public boolean isSouth() {
-        return south;
-    }
-
-    public boolean isEast() {
-        return east;
-    }
-
-    public boolean isWest() {
-        return west;
-    }
 
     protected boolean east;
     protected boolean west;
@@ -48,4 +33,6 @@ public class Cell {
     public int getY() {
         return y;
     }
+
+
 }
