@@ -24,7 +24,7 @@ public class MazeGUI extends JFrame implements ActionListener {
 
     public MazeGUI() {
 
-        setTitle("Maze");
+        setTitle("Maze Viewer");
         setSize(900, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocation(340, 90);
@@ -34,7 +34,7 @@ public class MazeGUI extends JFrame implements ActionListener {
         panel.setLayout(new BorderLayout(2, 1));
 
         JPanel entries = new JPanel();
-        FlowLayout fl = new FlowLayout(FlowLayout.TRAILING, 50, 5);
+        FlowLayout fl = new FlowLayout(FlowLayout.TRAILING, 30, 10);
         entries.setLayout(fl);
 
         heightField = new JTextField();
@@ -71,6 +71,9 @@ public class MazeGUI extends JFrame implements ActionListener {
         entries.add(enterButton);
         panel.add(maze, BorderLayout.CENTER);
         add(panel);
+        Color grey = new Color(180, 180, 180);
+        entries.setBackground(Color.GRAY);
+        panel.setBackground(grey);
     }
 
 

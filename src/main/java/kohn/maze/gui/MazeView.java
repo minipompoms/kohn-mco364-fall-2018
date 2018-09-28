@@ -12,9 +12,7 @@ public class MazeView extends JComponent {
     private int cols;
 
     public void setMaze() {
-
         maze = new Maze(rows, cols);
-
     }
 
     public void setRows(int rows) {
@@ -30,23 +28,11 @@ public class MazeView extends JComponent {
         Graphics2D g2 = (Graphics2D) g;
         BasicStroke wideStroke = new BasicStroke(4.5f);
         g2.setStroke(wideStroke);
-        paintBorder(g2, Color.black);
         maze.generateMaze();
         paintCells(g2);
         maze.createPath();
         paintGrid(g2);
         System.out.println(maze.toString());
-
-    }
-
-
-    public void paintBorder(Graphics g, Color c) {
-
-        Graphics2D g2 = (Graphics2D) g;
-        BasicStroke bs = new BasicStroke(17, 2, BasicStroke.CAP_ROUND);
-        g2.setColor(c);
-        g2.setStroke(bs);
-        g2.drawRect(1, 1, getWidth() - 1, getHeight());
     }
 
     public void paintCells(Graphics g) {
@@ -85,7 +71,6 @@ public class MazeView extends JComponent {
                 g.drawLine(x * cellWidth, 0, x * cellWidth, maze.getRows() * cellWidth);
             }
         }
-
     }
 
 
