@@ -23,27 +23,49 @@ public class VoteSmartController {
         this.service = service;
     }
 
-    public void loadStates() {
-        disposable = Observable.interval(0, 30, TimeUnit.SECONDS)
-                .flatMap(aLong -> service.getStateIDs())
-                .map(feed -> feed.getStateList())
+    public void getStateList() {
+        disposable = service.getStateIDs()
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.single())
-                .subscribe(this::setStateList, throwable -> throwable.printStackTrace());
+                .subscribe(this::showStateList, throwable -> throwable.printStackTrace());
     }
 
-    private void setStateList(StateList list) {
-        List<InternalList.State> states = list
-                .getList()
-                .getState()
-                .stream()
-                .filter((state -> state.getStateId().startsWith("N")))
-                .limit(10)
-                .collect(Collectors.toList());
-        viewProvider.get().setStates(states);
+    private void showStateList(VoteSmartFeed feed) {
+      InternalList list = feed.getStateList().getList();
+      viewProvider.get().setStates(list);
     }
 
-    public void refreshBills() {
+    public void getElectionData() {
+        disposable = service.getElectionByZip("11230", "3341")
+                .map(feed -> feed.getElections())
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.single())
+                .subscribe(this::showElectionData, throwable -> throwable.printStackTrace());
+    }
+
+    private void showElectionData(Elections e) {
+        List<Elections> list = e.getElection();
+        viewProvider.get().setElections(list);
+    }
+
+
+    public void getCandidateData(){
+
+        disposable = service.getCandidatesbyZipCode("11230", "3341")
+                .map(feed -> feed.getCandidateList())
+                .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.single())
+                .subscribe(this::showCandidateData, throwable -> throwable.printStackTrace());
+    }
+
+    public void showCandidateData(CandidateList c){
+        List<Candidate> list = c.getCandidate();
+        viewProvider.get().setCandidates(list);
+    }
+
+
+
+    public void getBills() {
         disposable = Observable.interval(0, 10, TimeUnit.SECONDS)
                 .flatMap(aLong -> service.getRecentBills())
                 .map(feed -> feed.getBills().getBill())
@@ -51,31 +73,6 @@ public class VoteSmartController {
                 .observeOn(Schedulers.single())
                 .subscribe(this::setBills, throwable -> throwable.printStackTrace());
     }
-
-
-    public void refreshElections() {
-
-        disposable = Observable.interval(0, 10, TimeUnit.SECONDS)
-                .flatMap(aLong -> service.getElectionByZip("11230", "3341"))
-                .map(feed -> feed.getElections().getElection())
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.single())
-                .subscribe(this::setElections, throwable -> throwable.printStackTrace());
-    }
-
-    private void setElections(List<Elections.Election> list) {
-       System.out.println(list.get(0));
-
-        List<Elections.Election> elections = list
-                .stream()
-                .distinct()
-                .collect(Collectors.toList());
-        System.out.println(elections.get(0));
-
-        viewProvider.get().setElections(elections);
-
-    }
-
 
     private void setBills(List<Bill> list) {
         List<Bill> bills = list

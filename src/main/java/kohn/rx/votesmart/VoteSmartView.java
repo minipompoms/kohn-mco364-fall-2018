@@ -19,6 +19,9 @@ public class VoteSmartView extends JFrame  {
 	private JTextArea billData;
 	private JTextArea states;
 	private JLabel fields[] = new JLabel[10];
+	private String stateList;
+	private JTextArea elections;
+	private JEditorPane candidate;
 
 	@Inject
 	public VoteSmartView(VoteSmartController controller) {
@@ -44,14 +47,15 @@ public class VoteSmartView extends JFrame  {
 	JPanel panel = new JPanel();
 	panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 	panel.setBorder(border);
-	billData = new JTextArea();
-		for (int i = 0; i < fields.length; i++) {
-			fields[i] = new JLabel();
-			panel.add(fields[i]);
-		}
+	//states = new JTextArea(stateList);
+	//panel.add(states);
+//	elections = new JTextArea();
+//	panel.add(elections);
+		candidate = new JEditorPane();
+		panel.add(candidate);
 
 	add(panel);
-	controller.refreshElections();
+	controller.getCandidateData();
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosed(WindowEvent e) {
@@ -61,26 +65,21 @@ public class VoteSmartView extends JFrame  {
 
 	}
 
-
-	public static void main(String[] args) {
-		Injector injector = Guice.createInjector(new VoteSmartModule());
-		VoteSmartView view = injector.getInstance(VoteSmartView.class);
-		view.setVisible(true);
+	public void setCandidates(List<Candidate> candidates){
+		StringBuilder sb = new StringBuilder();
+		sb.append(candidates);
+		System.out.println(sb.toString());
+		candidate.setText(sb.toString());
 	}
 
-
-	public void setStates(List<InternalList.State> list) {
+	public void setStates(InternalList list) {
 		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < list.size() & i < fields.length; i++) {
-			String properties = ("\n"+i+". "+list.get(i).getStateId() + " - "+list.get(i).getName() );
+		//String properties = ("\n"+i+". "+list.get(i).getStateId() + " - "+list.get(i).getName() );
 			//String info = String.format("%n\t%-8s|%40s%n", properties);
-			sb.append(properties);
-			System.out.println(sb.toString());
-			fields[i].setText(properties);
-			break;
-		}
-	//states.setText(sb.toString());
+		String stateName = list.getState().stream().findFirst().get().getName();
+		sb.append(stateName);
 		System.out.println(sb.toString());
+			stateList = sb.toString();
 
 	}
 	public void setBills(List<Bill> bills) {
@@ -94,19 +93,23 @@ public class VoteSmartView extends JFrame  {
 		}
 	//billData.setText(sb.toString());
 	}
-	public void setElections(List<Elections.Election> list) {
-		fields[0].setText(list.get(0).getElectionId()+ "   "+ list.get(0).getName());
-		/*StringBuilder sb = new StringBuilder();
-		for (int i = 1; i < list.size() & i < fields.length; i++) {
-			String properties = ("\n"+i+". "+list.get(i).getElectionId());
-			//String info = String.format("%n\t%-8s|%40s%n", properties);
-			sb.append(properties);
-			System.out.println(sb.toString());
-			fields[i].setText(properties + "#");
+	public void setElections(List<Elections> list) {
+		StringBuilder sb = new StringBuilder();
 
-		}
+		//String electionID = list.stream().filter(el);
+		sb.append(list);
+
+
 		System.out.println(sb.toString());
-*/
 	}
+
+
+
+	public static void main(String[] args) {
+		Injector injector = Guice.createInjector(new VoteSmartModule());
+		VoteSmartView view = injector.getInstance(VoteSmartView.class);
+		view.setVisible(true);
+	}
+
 }
 
