@@ -18,7 +18,6 @@ public class Maze {
         maze = new Cell[rows][cols];
     }
 
-
     public void generateMaze() {
         int x, y;
         for (x = 0; x < rows; x++) {
@@ -85,8 +84,6 @@ public class Maze {
     }
 
     private void removeWalls(Cell current, Cell neighbor) {
-       /* System.out.println("Remove wall between (row " + current.getX() + ", col " + current.getY() + ") &  (row " +
-                neighbor.getX() + ", col " + neighbor.getY() +")");*/
         int x = current.getX();
         int y = current.getY();
         if (x == neighbor.getX() + 1 && y == neighbor.getY()) {
@@ -152,6 +149,7 @@ public class Maze {
         return maze[x][y].west;
     }
 
+
     public String toString() {
         int x, y;
         StringBuilder sb = new StringBuilder();
@@ -184,6 +182,7 @@ public class Maze {
         sb.append("+");
         return (sb.toString());
     }
+
 
     public static void main(String[] args) {
 

@@ -7,27 +7,41 @@ import java.awt.*;
 
 public class MazeView extends JComponent {
 
-    Maze maze = new Maze(4, 4);
+    private Maze maze;
+    private int rows;
+    private int cols;
 
+    public void setMaze() {
+
+        maze = new Maze(rows, cols);
+
+    }
+
+    public void setRows(int rows) {
+        this.rows = rows;
+    }
+
+    public void setCols(int cols) {
+        this.cols = cols;
+    }
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-
-
         BasicStroke wideStroke = new BasicStroke(4.5f);
         g2.setStroke(wideStroke);
         paintBorder(g2, Color.black);
-
         maze.generateMaze();
         paintCells(g2);
         maze.createPath();
-        System.out.println(maze.toString());
         paintGrid(g2);
+        System.out.println(maze.toString());
+
     }
 
 
     public void paintBorder(Graphics g, Color c) {
+
         Graphics2D g2 = (Graphics2D) g;
         BasicStroke bs = new BasicStroke(17, 2, BasicStroke.CAP_ROUND);
         g2.setColor(c);
@@ -37,8 +51,8 @@ public class MazeView extends JComponent {
 
     public void paintCells(Graphics g) {
 
-        int x = 0;
-        int y = 0;
+        int x;
+        int y;
         Graphics2D g2 = (Graphics2D) g;
 
         Color grey = new Color(180, 180, 180);
@@ -50,7 +64,6 @@ public class MazeView extends JComponent {
 
         int cellWidth = getWidth() / maze.getRows();
         int cellHeight = getHeight() / maze.getCols();
-
 
         for (int row = 0; row < maze.getRows(); row++) {
             for (int col = 0; col < maze.getRows(); col++) {
@@ -77,6 +90,7 @@ public class MazeView extends JComponent {
 
 
     public void paintGrid(Graphics g) {
+
         Graphics2D g2 = (Graphics2D) g;
 
         Color grey = new Color(180, 180, 180);
