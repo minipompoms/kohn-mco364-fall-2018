@@ -61,13 +61,13 @@ public class MazeGUI extends JFrame implements ActionListener {
             cols = Integer.valueOf(height);
             maze.setRows(rows);
             maze.setCols(cols);
-            maze.setMaze();
+            maze.createMaze();
             repaint();
         });
 
         maze.setRows(rows);
         maze.setCols(rows);
-        maze.setMaze();
+        maze.createMaze();
         entries.add(enterButton);
         panel.add(maze, BorderLayout.CENTER);
         add(panel);

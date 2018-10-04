@@ -11,7 +11,7 @@ public class MazeView extends JComponent {
     private int rows;
     private int cols;
 
-    public void setMaze() {
+    public void createMaze() {
         maze = new Maze(rows, cols);
     }
 
@@ -98,16 +98,16 @@ public class MazeView extends JComponent {
             for (int col = 0; col < maze.getCols(); col++) {
                 int x = col * cellWidth;
                 int y = row * cellHeight;
-                if (maze.getNorthCell(row, col)) {
+                if (maze.hasNorthCell(row, col)) {
                     g.drawLine(x, y, x + cellWidth, y);
                 }
-                if (maze.getSouthCell(row, col)) {
+                if (maze.hasSouthCell(row, col)) {
                     g.drawLine(x + cellWidth, y + cellHeight, x, y + cellHeight);
                 }
-                if (maze.getEastCell(row, col)) {
+                if (maze.hasEastCell(row, col)) {
                     g.drawLine(x + cellWidth, y + cellHeight, x + cellWidth, y);
                 }
-                if (maze.getWestCell(row, col)) {
+                if (maze.hasWestCell(row, col)) {
                     g.drawLine(x, y, x, y + cellHeight);
                 }
             }

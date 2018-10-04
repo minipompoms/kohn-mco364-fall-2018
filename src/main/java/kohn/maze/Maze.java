@@ -133,19 +133,19 @@ public class Maze {
         return cols;
     }
 
-    public boolean getNorthCell(int x, int y) {
+    public boolean hasNorthCell(int x, int y) {
         return maze[x][y].north;
     }
 
-    public boolean getSouthCell(int x, int y) {
+    public boolean hasSouthCell(int x, int y) {
         return maze[x][y].south;
     }
 
-    public boolean getEastCell(int x, int y) {
+    public boolean hasEastCell(int x, int y) {
         return maze[x][y].east;
     }
 
-    public boolean getWestCell(int x, int y) {
+    public boolean hasWestCell(int x, int y) {
         return maze[x][y].west;
     }
 
