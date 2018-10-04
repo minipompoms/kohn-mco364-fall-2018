@@ -153,7 +153,6 @@ public class Maze {
     public String toString() {
         int x, y;
         StringBuilder sb = new StringBuilder();
-
         for (x = 0; x < rows; x++) {
             for (y = 0; y < cols; y++) {
                 if (maze[x][y].north) {
@@ -164,7 +163,6 @@ public class Maze {
                 }
             }
             sb.append("+\n");
-
             for (y = 0; y < cols; y++) {
                 if (maze[x][y].west) {
                     sb.append("|   ");
@@ -175,7 +173,6 @@ public class Maze {
             }
             sb.append("|\n");
         }
-
         for (y = 0; y < cols; y++) {
             sb.append("+---");
         }
