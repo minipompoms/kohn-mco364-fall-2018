@@ -9,6 +9,8 @@ import javax.swing.border.Border;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 @SuppressWarnings("serial")
 
@@ -21,7 +23,7 @@ public class VoteSmartView extends JFrame  {
 	private JLabel fields[] = new JLabel[10];
 	private String stateList;
 	private JTextArea elections;
-	private JEditorPane candidate;
+	private JTextArea candidate;
 
 	@Inject
 	public VoteSmartView(VoteSmartController controller) {
@@ -48,14 +50,16 @@ public class VoteSmartView extends JFrame  {
 	panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 	panel.setBorder(border);
 	//states = new JTextArea(stateList);
-	//panel.add(states);
-//	elections = new JTextArea();
-//	panel.add(elections);
-		candidate = new JEditorPane();
+	//panel.add(states);//	elections = new JTextArea();
+	//	panel.add(elections);
+		candidate = new JTextArea();
 		panel.add(candidate);
+		billData = new JTextArea();
+		panel.add(billData);
 
-	add(panel);
-	controller.getCandidateData();
+		add(panel);
+		//controller.getCandidateData();
+		controller.getBills();
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosed(WindowEvent e) {
@@ -63,11 +67,13 @@ public class VoteSmartView extends JFrame  {
 			}
 		});
 
-	}
+    }
 
-	public void setCandidates(List<Candidate> candidates){
+	public void setCandidates(Stream<Candidate> candidates){
+
 		StringBuilder sb = new StringBuilder();
-		sb.append(candidates);
+		Optional<Candidate> name = candidates.findAny();
+		sb.append(name);
 		System.out.println(sb.toString());
 		candidate.setText(sb.toString());
 	}
@@ -85,13 +91,16 @@ public class VoteSmartView extends JFrame  {
 	public void setBills(List<Bill> bills) {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < bills.size(); i++) {
-			Bill properties = bills.get(i);
+			String properties = bills.get(i).toString();
 
-			String billInfo = String.format("%n\t%-8s|%40s%n", properties.getBillNumber());
+			String billInfo = properties;
 			sb.append(billInfo);
 
 		}
-	//billData.setText(sb.toString());
+		System.out.println(sb.toString());
+
+		billData.setText(sb.toString());
+
 	}
 	public void setElections(List<Elections> list) {
 		StringBuilder sb = new StringBuilder();

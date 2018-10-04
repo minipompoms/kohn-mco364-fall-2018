@@ -2,13 +2,12 @@ package kohn.rx.votesmart;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 public class VoteSmartController {
@@ -50,34 +49,33 @@ public class VoteSmartController {
 
 
     public void getCandidateData(){
-
         disposable = service.getCandidatesbyZipCode("11230", "3341")
-                .map(feed -> feed.getCandidateList())
-                .subscribeOn(Schedulers.io())
+                .map(feed -> feed.getCandidateList().getCandidate())
+                .subscribeOn(Schedulers.trampoline())
                 .observeOn(Schedulers.single())
                 .subscribe(this::showCandidateData, throwable -> throwable.printStackTrace());
     }
 
-    public void showCandidateData(CandidateList c){
-        List<Candidate> list = c.getCandidate();
+    public void showCandidateData(List<Candidate> c){
+
+      Stream<Candidate> list = c.stream().filter(c1  -> c1.getElectionYear().equals("2018"));
         viewProvider.get().setCandidates(list);
     }
 
 
 
     public void getBills() {
-        disposable = Observable.interval(0, 10, TimeUnit.SECONDS)
+        disposable = service.getRecentBills()
                 .flatMap(aLong -> service.getRecentBills())
                 .map(feed -> feed.getBills().getBill())
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.single())
-                .subscribe(this::setBills, throwable -> throwable.printStackTrace());
+                .subscribe(this::showBills, throwable -> throwable.printStackTrace());
     }
 
-    private void setBills(List<Bill> list) {
+    private void showBills(List<Bill> list) {
         List<Bill> bills = list
                 .stream()
-                .filter(bill -> bill.getBillNumber().startsWith("2"))
                 .collect(Collectors.toList());
 
 

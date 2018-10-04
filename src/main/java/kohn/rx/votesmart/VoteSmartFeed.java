@@ -9,12 +9,14 @@ public class VoteSmartFeed extends AbstractModule {
 
 
 	private CandidateList candidateList;
-	private StateList stateList;
-	private Bills bills;
-	private Elections elections;
 	private List<Candidate> candidates;
+
+	private StateList stateList;
+	private Elections elections;
 	private Categories categories;
+
 	private List<Bill> billList;
+	private Bills bills;
 
 	
 	@Inject
