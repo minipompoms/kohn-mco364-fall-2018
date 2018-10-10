@@ -11,6 +11,8 @@ public class Cell {
     protected boolean visited;
     protected boolean north;
     protected boolean south;
+
+
     protected boolean east;
     protected boolean west;
 
@@ -31,4 +33,6 @@ public class Cell {
     public int getY() {
         return y;
     }
+
+
 }
