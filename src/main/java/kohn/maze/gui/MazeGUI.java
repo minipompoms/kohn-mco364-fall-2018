@@ -13,14 +13,15 @@ public class MazeGUI extends JFrame implements ActionListener {
 
     String width;
     String height;
-    int rows = 10;
-    int cols = 10;
+    int rows = 8;
+    int cols = 8;
 
-    JTextField heightField;
-    JTextField widthField;
-    JLabel heightLabel;
-    JLabel widthLabel;
-    JButton enterButton;
+    private JTextField heightField;
+    private JTextField widthField;
+    private JLabel heightLabel;
+    private JLabel widthLabel;
+    private JButton enterButton;
+
 
     public MazeGUI() {
 
@@ -53,16 +54,27 @@ public class MazeGUI extends JFrame implements ActionListener {
 
         enterButton = new JButton(" Enter ");
         enterButton.addActionListener(e -> {
-            width = widthField.getText();
-            height = heightField.getText();
-            widthField.setText(width);
-            heightField.setText(height);
-            rows = Integer.valueOf(width);
-            cols = Integer.valueOf(height);
-            maze.setRows(rows);
-            maze.setCols(cols);
-            maze.createMaze();
-            repaint();
+                    width = widthField.getText();
+                    height = heightField.getText();
+                    widthField.setText(width);
+                    heightField.setText(height);
+                    rows = Integer.valueOf(width);
+                    cols = Integer.valueOf(height);
+                    maze.setRows(rows);
+                    maze.setCols(cols);
+                    maze.createMaze();
+            maze.onStart(true);
+
+            Thread thread = new Thread(new Runnable() {
+
+                @Override
+                public void run() {
+                    maze.repaint();
+
+                }
+
+            });
+            thread.start();
         });
 
         maze.setRows(rows);
@@ -71,19 +83,24 @@ public class MazeGUI extends JFrame implements ActionListener {
         entries.add(enterButton);
         panel.add(maze, BorderLayout.CENTER);
         add(panel);
+
+
+
         Color grey = new Color(180, 180, 180);
         entries.setBackground(Color.GRAY);
         panel.setBackground(grey);
     }
 
 
+
     public static void main(String[] args) {
 
         new MazeGUI().setVisible(true);
     }
-
     @Override
     public void actionPerformed(ActionEvent e) {
 
+
     }
+
 }

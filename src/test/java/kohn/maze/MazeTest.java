@@ -21,7 +21,7 @@ class MazeTest {
 
     @Test
     void createPath() {
-        
+
     }
 
     @Test

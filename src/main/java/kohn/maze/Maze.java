@@ -1,5 +1,6 @@
 package kohn.maze;
 
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.Stack;
 
@@ -10,6 +11,7 @@ public class Maze {
     private Cell[][] maze;
     private Stack<Cell> stack = new Stack<>();
     private final Random RANDOM = new Random();
+    private ArrayList<Cell> pathDirection = new ArrayList<>();
 
 
     public Maze(int rows, int cols) {
@@ -51,7 +53,10 @@ public class Maze {
             }
             else {
                 cell = stack.pop();
+
             }
+            pathDirection.add(cell);
+
         }
     }
 
@@ -86,6 +91,7 @@ public class Maze {
     private void removeWalls(Cell current, Cell neighbor) {
         int x = current.getX();
         int y = current.getY();
+
         if (x == neighbor.getX() + 1 && y == neighbor.getY()) {
             current.north = false;
             neighbor.south = false;
@@ -94,16 +100,19 @@ public class Maze {
         else if (x == neighbor.getX() && y == neighbor.getY() + 1) {
             current.west = false;
             neighbor.east = false;
+
         }
         //west neighbor
         else if (x == neighbor.getX() && y == neighbor.getY() - 1) {
             current.east = false;
             neighbor.west = false;
+
         }
         //north neighbor
         else if (x == neighbor.getX() - 1 && y == neighbor.getY()) {
             current.south = false;
             neighbor.north = false;
+
         }
         current.neighbors.remove(neighbor);
         neighbor.neighbors.remove(current);
@@ -120,6 +129,7 @@ public class Maze {
                 if (!maze[x][y].visited) {
                     return true;
                 }
+
             }
         }
         return false;
@@ -149,6 +159,9 @@ public class Maze {
         return maze[x][y].west;
     }
 
+    public ArrayList<Cell> getPathDirection(){
+        return pathDirection;
+    }
 
     public String toString() {
         int x, y;
@@ -179,6 +192,7 @@ public class Maze {
         sb.append("+");
         return (sb.toString());
     }
+
 
 
     public static void main(String[] args) {
