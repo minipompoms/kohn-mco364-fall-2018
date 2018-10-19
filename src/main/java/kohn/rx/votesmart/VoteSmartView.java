@@ -17,7 +17,7 @@ import java.util.stream.Stream;
 
 @Singleton
 public class VoteSmartView extends JFrame  {
-    
+
 	private JTextArea billData;
 	private JTextArea states;
 	private JLabel fields[] = new JLabel[10];
