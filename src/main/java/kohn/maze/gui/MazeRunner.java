@@ -13,7 +13,7 @@ public class MazeRunner {
     Point nextPoint;
     public BufferedImage runner = null;
 
-    public MazeRunner(Point prevPoint, Point nextPoint){
+    public MazeRunner(Point prevPoint, Point nextPoint) {
         this.prevPoint = prevPoint;
         this.nextPoint = nextPoint;
 
@@ -24,6 +24,6 @@ public class MazeRunner {
         }
     }
 
-    public void drawRunner(Graphics g){ g.drawImage(runner, nextPoint.x, nextPoint.y, null); }
+    public void drawRunner(Graphics g) { g.drawImage(runner, nextPoint.x, nextPoint.y, null); }
 
 }

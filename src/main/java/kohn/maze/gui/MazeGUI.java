@@ -54,49 +54,50 @@ public class MazeGUI extends JFrame implements ActionListener {
 
         enterButton = new JButton(" Enter ");
         enterButton.addActionListener(e -> {
-                    width = widthField.getText();
-                    height = heightField.getText();
-                    widthField.setText(width);
-                    heightField.setText(height);
-                    rows = Integer.valueOf(width);
-                    cols = Integer.valueOf(height);
-                    maze.setRows(rows);
-                    maze.setCols(cols);
-                    maze.createMaze();
+            width = widthField.getText();
+            height = heightField.getText();
+            widthField.setText(width);
+            heightField.setText(height);
+            rows = Integer.valueOf(width);
+            cols = Integer.valueOf(height);
+            maze.setRows(rows);
+            maze.setCols(cols);
+            maze.createMaze();
             maze.onStart(true);
 
-            Thread thread = new Thread(new Runnable() {
-
-                @Override
-                public void run() {
-                    maze.repaint();
-
-                }
-
-            });
-            thread.start();
+            maze.repaint();
         });
+
 
         maze.setRows(rows);
         maze.setCols(rows);
         maze.createMaze();
         entries.add(enterButton);
+
         panel.add(maze, BorderLayout.CENTER);
+        Thread thread = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+
+            }
+
+        });
+
+        thread.start();
         add(panel);
-
-
-
         Color grey = new Color(180, 180, 180);
         entries.setBackground(Color.GRAY);
         panel.setBackground(grey);
-    }
 
+    }
 
 
     public static void main(String[] args) {
 
         new MazeGUI().setVisible(true);
     }
+
     @Override
     public void actionPerformed(ActionEvent e) {
 

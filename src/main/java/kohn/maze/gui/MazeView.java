@@ -21,6 +21,8 @@ public class MazeView extends JComponent {
     private Point nextPoint = new Point();
 
     private boolean start;
+    int index = 0;
+
     public void createMaze() {
         maze = new Maze(rows, cols);
         maze.generateMaze();
@@ -40,34 +42,16 @@ public class MazeView extends JComponent {
         g2.setStroke(wideStroke);
         paintCells(g2);
         paintGrid(g2);
-        while(start){
-            for (int i = 0; i < path.size() - 1; i++) {
-                MazeRunner runner = new MazeRunner(prevPoint, nextPoint);
+        if(start == true){
+            paintRunnersPath(g2);
 
-                int y = path.get(i).getX();
-                int x = path.get(i).getY();
-                int nextY = path.get(i + 1).getX();
-                int nextX = path.get(i + 1).getY();
-                prevPoint.setLocation((cellWidth * x + 20), ((cellHeight * y) + 20));
-                nextPoint.setLocation((cellWidth * nextX + 20), (cellHeight * nextY + 20));
-
-                runner.drawRunner(g2);
-
-
-            }
-            onStart(false);
         }
-
-
-
-
-
-
+        start = false;
     }
 
 
     public void paintCells(Graphics g) {
-
+        index = 0;
         int x;
         int y;
         Graphics2D g2 = (Graphics2D) g;
@@ -139,10 +123,33 @@ public class MazeView extends JComponent {
                 if (maze.hasWestCell(row, col)) {
                     g.drawLine(x, y, x, y + cellHeight);
                 }
+
             }
+
         }
     }
 
+    private void paintRunnersPath(Graphics g) {
+
+        while (index < path.size() - 1) {
+            MazeRunner runner = new MazeRunner(prevPoint, nextPoint);
+            int y = path.get(index).getX();
+            int x = path.get(index).getY();
+            int nextY = path.get(index + 1).getX();
+            int nextX = path.get(index + 1).getY();
+            prevPoint.setLocation((cellWidth * x + 20), ((cellHeight * y) + 20));
+            nextPoint.setLocation((cellWidth * nextX + 20), (cellHeight * nextY + 20));
+            //   System.out.println(path.get(index).getX()+", "+path.get(index).getY());
+            runner.drawRunner(g);
+            Color transparent = new Color(60, 60, 60, 15);
+            g.setColor(transparent);
+            index++;
+            g.fillOval(prevPoint.x, prevPoint.y, 45, 35);
+
+        }
+
+
+    }
 
 
     public void setRows(int rows) {
