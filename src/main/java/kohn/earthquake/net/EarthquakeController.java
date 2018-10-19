@@ -2,12 +2,11 @@ package kohn.earthquake.net;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import io.reactivex.Observable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import kohn.earthquake.Earthquake;
+
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class EarthquakeController {
@@ -27,9 +26,7 @@ public class EarthquakeController {
     }
 
     public void refreshData() { //observable simplifies cause no call object
-        disposable =
-                Observable.interval(0, 30, TimeUnit.SECONDS)
-                        .flatMap(aLong -> service.getData(day))
+        disposable = service.getData(day)
                         .map(feed -> feed.getFeatures())
                         .subscribeOn(Schedulers.io())
                         .observeOn(Schedulers.single())

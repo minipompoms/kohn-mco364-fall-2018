@@ -4,6 +4,7 @@ import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 
+import javax.inject.Singleton;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.event.WindowAdapter;
@@ -14,10 +15,9 @@ import java.util.stream.Stream;
 
 @SuppressWarnings("serial")
 
+@Singleton
 public class VoteSmartView extends JFrame  {
-
-
-
+    
 	private JTextArea billData;
 	private JTextArea states;
 	private JLabel fields[] = new JLabel[10];

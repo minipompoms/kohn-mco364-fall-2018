@@ -5,11 +5,13 @@ import com.google.inject.Provider;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
+import javax.inject.Singleton;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
+@Singleton
 public class VoteSmartController {
 
     private Provider<VoteSmartView> viewProvider;
@@ -66,7 +68,6 @@ public class VoteSmartController {
 
     public void getBills() {
         disposable = service.getRecentBills()
-                .flatMap(aLong -> service.getRecentBills())
                 .map(feed -> feed.getBills().getBill())
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.single())
