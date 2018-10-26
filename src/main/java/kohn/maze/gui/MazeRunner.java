@@ -9,8 +9,8 @@ import static javax.imageio.ImageIO.read;
 
 public class MazeRunner {
 
-    Point prevPoint;
-    Point nextPoint;
+    private Point prevPoint;
+    private Point nextPoint;
     public BufferedImage runner = null;
 
     public MazeRunner(Point prevPoint, Point nextPoint) {
@@ -19,8 +19,8 @@ public class MazeRunner {
 
         try {
             runner = read(new File("src/images/mario-running.png"));
-        } catch (IOException e2) {
-            e2.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

@@ -3,10 +3,8 @@ package kohn.maze.gui;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-public class MazeGUI extends JFrame implements ActionListener {
+public class MazeGUI extends JFrame  {
 
     MazeView maze = new MazeView();
     JPanel panel = new JPanel();
@@ -75,16 +73,7 @@ public class MazeGUI extends JFrame implements ActionListener {
         entries.add(enterButton);
 
         panel.add(maze, BorderLayout.CENTER);
-        Thread thread = new Thread(new Runnable() {
 
-            @Override
-            public void run() {
-
-            }
-
-        });
-
-        thread.start();
         add(panel);
         Color grey = new Color(180, 180, 180);
         entries.setBackground(Color.GRAY);
@@ -98,10 +87,6 @@ public class MazeGUI extends JFrame implements ActionListener {
         new MazeGUI().setVisible(true);
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
 
-
-    }
 
 }
