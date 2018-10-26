@@ -9,7 +9,6 @@ import java.util.ArrayList;
 public class Canvas extends JComponent implements MouseMotionListener {
     protected ArrayList<Point> pointers;
 
-
     public Canvas(){
         pointers = new ArrayList<>();
         this.addMouseMotionListener(this);
@@ -23,10 +22,10 @@ public class Canvas extends JComponent implements MouseMotionListener {
         g2.fillRect(0, 0, getWidth(), getHeight());
         g2.setColor(Color.black);
 
-
         for(int i = 0; i < pointers.size(); ++i){
             int x = (int)pointers.get(i).getX();
             int y = (int) pointers.get(i).getY();
+
             g2.fillRect(x, y, 3, 3);
 
         }
@@ -42,6 +41,11 @@ public class Canvas extends JComponent implements MouseMotionListener {
     public void mouseMoved(MouseEvent e) {
         pointers.add(e.getPoint());
         repaint();
+        e.getComponent().setCursor(Toolkit.getDefaultToolkit().createCustomCursor(
+                new ImageIcon("src/images/pencil_cursor.png").getImage(),
+                new Point(getX(),getY()),"pencil_cursor.png"));
+
     }
+
 
 }

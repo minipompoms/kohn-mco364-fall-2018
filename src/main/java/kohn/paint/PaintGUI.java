@@ -6,8 +6,8 @@ public class PaintGUI extends JFrame  {
     Canvas canvas;
     public PaintGUI(){
         setTitle("Paint");
-        setSize(400, 450);
-
+        setSize(600, 450);
+        setLocation(510, 250);
         canvas = new Canvas();
 
         add(canvas);
@@ -19,5 +19,4 @@ public class PaintGUI extends JFrame  {
         new PaintGUI().setVisible(true);
     }
 
-//the only time you are allowed to paint to the screen is through JComponent
 }
