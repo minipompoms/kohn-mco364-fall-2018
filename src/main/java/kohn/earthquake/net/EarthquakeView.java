@@ -1,12 +1,6 @@
 package kohn.earthquake.net;
 
 
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.util.List;
-import javax.swing.*;
-import javax.swing.border.Border;
-
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
@@ -14,19 +8,25 @@ import com.google.inject.Singleton;
 import kohn.earthquake.Earthquake;
 import kohn.earthquake.EarthquakeProperties;
 
+import javax.swing.*;
+import javax.swing.border.Border;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.util.List;
+
 
 
 @SuppressWarnings("serial")
 @Singleton
 
-public class EarthquakeView extends JFrame  {
+public class EarthquakeView extends JFrame {
 
 	private JTextArea earthquakes;
 
     @Inject
     public EarthquakeView(EarthquakeController controller) {
+        setLocation(540, 320);
 
-		setLocation(540, 320);
 		setSize(540, 350);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("Earthquake Feed...");
@@ -66,8 +66,5 @@ public class EarthquakeView extends JFrame  {
                 sb.append(eq);
         }
         earthquakes.setText(sb.toString());
-
     }
-
-
 }
