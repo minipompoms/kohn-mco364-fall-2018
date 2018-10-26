@@ -7,17 +7,18 @@ import io.reactivex.schedulers.Schedulers;
 import kohn.earthquake.Earthquake;
 
 import java.util.List;
+
 import java.util.stream.Collectors;
 
 public class EarthquakeController {
     private USGSEarthquakeService service;
 
     private Provider<EarthquakeView> viewProvider;
-    String month = "month";
-    String day = "day";
-    String week = "week";
-    String hour = "hour";
-    Disposable disposable;
+    private static String month = "month";
+    private static String day = "day";
+    private static String week = "week";
+    private static String hour = "hour";
+    private static Disposable disposable;
 
     @Inject
     public EarthquakeController(USGSEarthquakeService service, Provider<EarthquakeView> viewProvider) {

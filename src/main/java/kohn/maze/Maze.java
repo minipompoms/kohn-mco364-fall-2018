@@ -18,7 +18,7 @@ public class Maze {
         maze = new Cell[rows][cols];
     }
 
-    private void generateMaze() {
+    public void generateMaze() {
         int x, y;
         for (x = 0; x < rows; x++) {
             for (y = 0; y < cols; y++) {
@@ -34,7 +34,7 @@ public class Maze {
         }
     }
 
-    private void createPath() {
+    public void createPath() {
         int x = 0;
         int y = 0;
         Cell cell = maze[x][y];
@@ -42,7 +42,7 @@ public class Maze {
         while (containsUnvisitedCells()) {
             if (removeVisitedNeighbors(cell) != 0) {
                 Cell neighbor = getRandomNeighbor(cell);
-                if(neighbor != null) {
+                if (neighbor != null) {
                     removeWalls(cell, neighbor);
                     stack.push(cell);
                     cell = neighbor;
@@ -84,8 +84,6 @@ public class Maze {
     }
 
     private void removeWalls(Cell current, Cell neighbor) {
-       /* System.out.println("Remove wall between (row " + current.getX() + ", col " + current.getY() + ") &  (row " +
-                neighbor.getX() + ", col " + neighbor.getY() +")");*/
         int x = current.getX();
         int y = current.getY();
         if (x == neighbor.getX() + 1 && y == neighbor.getY()) {
@@ -109,7 +107,6 @@ public class Maze {
         }
         current.neighbors.remove(neighbor);
         neighbor.neighbors.remove(current);
-        displayMaze();
     }
 
     private int removeVisitedNeighbors(Cell cell) {
@@ -128,13 +125,37 @@ public class Maze {
         return false;
     }
 
-    private void displayMaze() {
+    public int getRows() {
+        return rows;
+    }
+
+    public int getCols() {
+        return cols;
+    }
+
+    public boolean hasNorthCell(int x, int y) {
+        return maze[x][y].north;
+    }
+
+    public boolean hasSouthCell(int x, int y) {
+        return maze[x][y].south;
+    }
+
+    public boolean hasEastCell(int x, int y) {
+        return maze[x][y].east;
+    }
+
+    public boolean hasWestCell(int x, int y) {
+        return maze[x][y].west;
+    }
+
+
+    public String toString() {
         int x, y;
         StringBuilder sb = new StringBuilder();
-
         for (x = 0; x < rows; x++) {
             for (y = 0; y < cols; y++) {
-                if (maze[x][y].north ) {
+                if (maze[x][y].north) {
                     sb.append("+---");
                 }
                 else {
@@ -142,7 +163,6 @@ public class Maze {
                 }
             }
             sb.append("+\n");
-
             for (y = 0; y < cols; y++) {
                 if (maze[x][y].west) {
                     sb.append("|   ");
@@ -153,20 +173,15 @@ public class Maze {
             }
             sb.append("|\n");
         }
-
         for (y = 0; y < cols; y++) {
             sb.append("+---");
         }
         sb.append("+");
-        System.out.println();
-        System.out.println(sb.toString());
+        return (sb.toString());
     }
 
+
     public static void main(String[] args) {
-        Maze m = new Maze(4, 4);
-        m.generateMaze();
-        m.displayMaze();
-        m.createPath();
-        m.displayMaze();
+
     }
 }
