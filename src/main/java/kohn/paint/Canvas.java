@@ -7,10 +7,16 @@ import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 
 public class Canvas extends JComponent implements MouseMotionListener {
-    protected ArrayList<Point> pointers;
+
+    private ArrayList<Point> pointers;
+    private Toolkit toolkit;
+    private Image image;
+
 
     public Canvas(){
         pointers = new ArrayList<>();
+        toolkit = Toolkit.getDefaultToolkit();
+        image = toolkit.getImage("src/images/pencil_cursor.png");
         this.addMouseMotionListener(this);
     }
 
@@ -21,31 +27,45 @@ public class Canvas extends JComponent implements MouseMotionListener {
         g2.setColor(grey);
         g2.fillRect(0, 0, getWidth(), getHeight());
         g2.setColor(Color.black);
+        int x;
+        int y;
+        for(int i = 0; i < pointers.size()-1; ++i){
+            x =  pointers.get(i).x;
+            y =  pointers.get(i).y;
 
-        for(int i = 0; i < pointers.size(); ++i){
-            int x = (int)pointers.get(i).getX();
-            int y = (int) pointers.get(i).getY();
-
-            g2.fillRect(x, y, 3, 3);
-
+            g2.drawLine(x, y, pointers.get(i+1).x, pointers.get(i+1).y);
         }
+
     }
 
 
     @Override
     public void mouseDragged(MouseEvent e) {
-
+        pointers.add(e.getPoint());
+        mouseClicked(e);
+        Cursor cursor = toolkit.createCustomCursor(image , new Point(getX(),
+                getY()), "pencil_cursor.jpg");
+        e.getComponent().setCursor(cursor);
+        repaint();
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        pointers.add(e.getPoint());
-        repaint();
-        e.getComponent().setCursor(Toolkit.getDefaultToolkit().createCustomCursor(
-                new ImageIcon("src/images/pencil_cursor.png").getImage(),
-                new Point(getX(),getY()),"pencil_cursor.png"));
+
+
 
     }
 
 
+    public void mouseClicked(MouseEvent e){
+        if(SwingUtilities.isRightMouseButton(e)){
+            clearCanvas();
+        }
+    }
+
+    public void clearCanvas(){
+        pointers.clear();
+        repaint();
+
+    }
 }
