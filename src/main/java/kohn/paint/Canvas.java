@@ -3,50 +3,71 @@ package kohn.paint;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.geom.Line2D;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-public class Canvas extends JComponent implements MouseMotionListener {
-
-    private ArrayList<Point> pointers;
+public class Canvas extends JComponent implements MouseMotionListener, MouseListener {
+    private ArrayList<Line2D> lines;
     private Toolkit toolkit;
     private Image image;
-
+    private Line2D line;
+    private Point prev;
+    private Point next;
+    private BufferedImage bufferedImage;
+    private Graphics2D g2;
 
     public Canvas(){
-        pointers = new ArrayList<>();
+        bufferedImage=  new BufferedImage(500, 600, BufferedImage.TYPE_INT_ARGB);
+        g2 = bufferedImage.createGraphics();
+        next = new Point();
+        line = new Line2D.Double();
+        lines = new ArrayList<>();
         toolkit = Toolkit.getDefaultToolkit();
         image = toolkit.getImage("src/images/pencil_cursor.png");
         this.addMouseMotionListener(this);
+        this.addMouseListener(this);
     }
 
     public void paintComponent(Graphics g){
         super.paintComponent(g);
-        Graphics g2 = (Graphics)g;
+        Graphics2D g2 = (Graphics2D) g.create();
         Color grey = new Color(219, 219, 219);
         g2.setColor(grey);
         g2.fillRect(0, 0, getWidth(), getHeight());
+        g2.drawImage(bufferedImage, 0, 0, bufferedImage.getWidth(), bufferedImage.getHeight(), null);
+
         g2.setColor(Color.black);
-        int x;
-        int y;
-        for(int i = 0; i < pointers.size()-1; ++i){
-            x =  pointers.get(i).x;
-            y =  pointers.get(i).y;
-
-            g2.drawLine(x, y, pointers.get(i+1).x, pointers.get(i+1).y);
-        }
-
+        for(Line2D line : lines){
+          draw(line);
+      }
     }
+
 
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        pointers.add(e.getPoint());
-        mouseClicked(e);
-        Cursor cursor = toolkit.createCustomCursor(image , new Point(getX(),
-                getY()), "pencil_cursor.jpg");
-        e.getComponent().setCursor(cursor);
-        repaint();
+        if (prev != null) {
+            next = e.getPoint();
+            line = new Line2D.Double(prev, next);
+            lines.add(line);
+
+            repaint();
+            prev = next;
+            mouseClicked(e);
+            Cursor cursor = toolkit.createCustomCursor(image , new Point(getX(),
+                    getY()), "pencil_cursor.jpg");
+            e.getComponent().setCursor(cursor);
+            repaint();
+        }
+
+    }
+
+    private void draw(Line2D line){
+        g2.setColor(Color.black);
+        g2.draw(line);
     }
 
     @Override
@@ -63,8 +84,30 @@ public class Canvas extends JComponent implements MouseMotionListener {
         }
     }
 
+    @Override
+    public void mousePressed(MouseEvent e) {
+        if (SwingUtilities.isLeftMouseButton(e)) {
+            prev = e.getPoint();
+        }
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        prev = null;
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
+
     public void clearCanvas(){
-        pointers.clear();
+
         repaint();
 
     }
