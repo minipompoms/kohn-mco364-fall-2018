@@ -4,21 +4,29 @@ import javax.swing.*;
 import java.awt.*;
 
 public class PaintGUI extends JFrame {
-    Canvas canvas;
+
+    private Canvas canvas;
+    private JButton shapeButton;
+    private JButton lineButton;
 
     public PaintGUI() {
         setTitle("Paint");
-        setSize(600, 450);
+        setSize(700, 550);
         setLocation(510, 250);
-
         canvas = new Canvas();
 
-        add(canvas, BorderLayout.CENTER);
-        ;
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 1, 20, 10));
+        buttonPanel.setBackground(Color.lightGray);
+        shapeButton = new JButton();
+        shapeButton.addActionListener(e -> {
 
-        JButton button = new JButton("CLICK ME FOR COLOR");
-        add(button, BorderLayout.NORTH);
-        button.addActionListener(e -> {
+        });
+        lineButton = new JButton("/");
+        buttonPanel.add(shapeButton);
+        buttonPanel.add(lineButton);
+        JButton colorButton = new JButton("CLICK ME FOR COLOR");
+        buttonPanel.add(colorButton);
+        colorButton.addActionListener(e -> {
             Color newColor = JColorChooser.showDialog(
                     PaintGUI.this,
                     "COLORS",
@@ -26,9 +34,13 @@ public class PaintGUI extends JFrame {
             canvas.setColor(newColor);
 
         });
+
+        add(buttonPanel, BorderLayout.NORTH);
+        add(canvas, BorderLayout.CENTER);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     }
+
 
     public void addShape() {
 

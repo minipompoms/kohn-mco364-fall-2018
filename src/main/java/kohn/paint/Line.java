@@ -14,11 +14,6 @@ public class Line {
         this.color = color;
     }
 
-    public void drawLine(Graphics g, Color c){
-        g.setColor(c);
-        g.drawLine(start.x, start.y, end.x, end.y);
-    }
-
     public Point getStart() {
         return start;
     }
@@ -30,4 +25,5 @@ public class Line {
     public Color getColor() {
         return color;
     }
+
 }
