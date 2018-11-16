@@ -13,6 +13,6 @@ public class ShapeTool implements Tool {
 
     @Override
     public void onDrag(Point point) {
-        rectangle = new Rectangle(new Point(rectangle.getStart()), new Point(rectangle.getEnd()), rectangle.getColor());
+        rectangle = new Rectangle(rectangle.getColor());
     }
 }

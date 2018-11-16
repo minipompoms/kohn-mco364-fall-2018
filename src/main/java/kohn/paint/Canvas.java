@@ -16,7 +16,6 @@ public class Canvas extends JComponent implements MouseMotionListener, MouseList
     private Point end;
     private Color color = Color.black;
     private Rectangle rectangle;
-
     public Canvas() {
 
         this.addMouseMotionListener(this);
@@ -36,29 +35,28 @@ public class Canvas extends JComponent implements MouseMotionListener, MouseList
       /*  Line line = new Line(color);
         tool = new PencilTool(line);
         shapes.add(line);*/
-
+        rectangle = new Rectangle(color);
         start = e.getPoint();
+        tool = new ShapeTool(rectangle);
+        rectangle.setStart(start);
+
     }
 
     @Override
     public void mouseDragged(MouseEvent e) {
 
-        end = e.getPoint();
-        rectangle = new Rectangle(start, end, color);
+        rectangle.setEnd(e.getPoint());
+        tool.onDrag(e.getPoint());
         shapes.add(rectangle);
-
-        tool = new ShapeTool(rectangle);
-
-        tool.onDrag(end);
-
         repaint();
+
     }
 
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        rectangle = null;
-
+        rectangle.setEnd(e.getPoint());
+        repaint();
     }
 
     @Override
