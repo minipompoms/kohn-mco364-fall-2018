@@ -12,9 +12,10 @@ public class Canvas extends JComponent implements MouseMotionListener, MouseList
 
     private List<Shape> shapes = new ArrayList<>();
     private Tool tool;
-
+    private Point start;
+    private Point end;
     private Color color = Color.black;
-
+    private Rectangle rectangle;
 
     public Canvas() {
 
@@ -24,30 +25,39 @@ public class Canvas extends JComponent implements MouseMotionListener, MouseList
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        for(Shape shape : shapes){
+        for (Shape shape : shapes) {
             shape.draw(g);
         }
-
     }
-
 
 
     @Override
     public void mousePressed(MouseEvent e) {
-        Line line = new Line(color);
+      /*  Line line = new Line(color);
         tool = new PencilTool(line);
-        shapes.add(line);
+        shapes.add(line);*/
+
+        start = e.getPoint();
     }
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        tool.onDrag(e.getPoint());
+
+        end = e.getPoint();
+        rectangle = new Rectangle(start, end, color);
+        shapes.add(rectangle);
+
+        tool = new ShapeTool(rectangle);
+
+        tool.onDrag(end);
+
         repaint();
     }
 
 
     @Override
     public void mouseReleased(MouseEvent e) {
+        rectangle = null;
 
     }
 
@@ -65,8 +75,6 @@ public class Canvas extends JComponent implements MouseMotionListener, MouseList
 
     @Override
     public void mouseExited(MouseEvent e) { }
-
-
 
 
     public void setColor(Color color) {

@@ -3,7 +3,7 @@ package kohn.paint;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class Line extends Shape{
+public class Line extends Shape {
 
     public ArrayList<Point> lines = new ArrayList<>();
 
@@ -20,7 +20,6 @@ public class Line extends Shape{
         return color;
     }
 
-
     @Override
     public void draw(Graphics graphics) {
         super.draw(graphics);
@@ -30,7 +29,5 @@ public class Line extends Shape{
             Point end = lines.get(i-1);
             graphics.drawLine(start.x, start.y, end.x, end.y);
         }
-
     }
-
 }

@@ -8,6 +8,7 @@ public class Rectangle extends Shape {
     private Point start;
     private Point end;
 
+
     public Rectangle(Point start, Point end, Color color) {
         super(color);
         this.color = color;
@@ -15,12 +16,21 @@ public class Rectangle extends Shape {
         this.end = end;
     }
 
-
-
-
     public Color getColor(){
         return color;
     }
+
+    public Point getStart() {
+        return start;
+    }
+
+    public Point getEnd() {
+        return end;
+    }
+    public void setEnd(Point end) {
+        this.end = end;
+    }
+
     @Override
     public void draw(Graphics graphics) {
         super.draw(graphics);
