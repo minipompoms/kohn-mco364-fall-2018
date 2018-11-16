@@ -18,10 +18,12 @@ public class PaintGUI extends JFrame {
         JPanel buttonPanel = new JPanel(new GridLayout(1, 1, 20, 10));
         buttonPanel.setBackground(Color.lightGray);
         shapeButton = new JButton();
-        shapeButton.addActionListener(e -> {
 
+        shapeButton.addActionListener(e -> {
         });
         lineButton = new JButton("/");
+        lineButton.addActionListener(e ->{
+        });
         buttonPanel.add(shapeButton);
         buttonPanel.add(lineButton);
         JButton colorButton = new JButton("CLICK ME FOR COLOR");
@@ -42,11 +44,9 @@ public class PaintGUI extends JFrame {
     }
 
 
-    public void addShape() {
-
-    }
 
     public static void main(String[] args) {
+
         new PaintGUI().setVisible(true);
     }
 
