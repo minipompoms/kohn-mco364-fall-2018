@@ -17,11 +17,12 @@ public class Rectangle extends Shape {
         return color;
     }
 
-
+    @Override
     public void setStart(Point start) {
         this.start = start;
     }
 
+    @Override
     public void setEnd(Point end) {
         this.end = end;
     }

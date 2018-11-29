@@ -6,6 +6,8 @@ import java.util.ArrayList;
 public class Line extends Shape {
 
     public ArrayList<Point> lines = new ArrayList<>();
+    private Point start;
+    private Point end;
 
     public Line(Color color){
         super(color);
@@ -21,12 +23,22 @@ public class Line extends Shape {
     }
 
     @Override
+    public void setStart(Point start) {
+        super.setStart(start);
+    }
+
+    @Override
+    public void setEnd(Point end) {
+        super.setEnd(end);
+    }
+
+    @Override
     public void draw(Graphics graphics) {
         super.draw(graphics);
 
         for(int i = 1; i < lines.size(); i++){
-            Point start = lines.get(i);
-            Point end = lines.get(i-1);
+            start = lines.get(i);
+            end = lines.get(i-1);
             graphics.drawLine(start.x, start.y, end.x, end.y);
         }
     }

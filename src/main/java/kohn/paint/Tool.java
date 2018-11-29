@@ -4,5 +4,9 @@ import java.awt.*;
 
 interface Tool {
 
-    void onDrag(Point point);
+    Shape getShape();
+    void setColor(Color color);
+    void mousePressed(Point point);
+    void mouseDragged(Point point);
+    void mouseReleased(Point point);
 }

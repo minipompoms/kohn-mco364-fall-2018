@@ -11,15 +11,15 @@ import java.util.List;
 public class Canvas extends JComponent implements MouseMotionListener, MouseListener {
 
     private List<Shape> shapes = new ArrayList<>();
-    private Tool tool;
-    private Point start;
-    private Point end;
     private Color color = Color.black;
-    private Rectangle rectangle;
-    public Canvas() {
 
+    private Tool tool;
+
+
+    public Canvas() {
         this.addMouseMotionListener(this);
         this.addMouseListener(this);
+
     }
 
     public void paintComponent(Graphics g) {
@@ -32,36 +32,27 @@ public class Canvas extends JComponent implements MouseMotionListener, MouseList
 
     @Override
     public void mousePressed(MouseEvent e) {
-      /*  Line line = new Line(color);
-        tool = new PencilTool(line);
-        shapes.add(line);*/
-        rectangle = new Rectangle(color);
-        start = e.getPoint();
-        tool = new ShapeTool(rectangle);
-        rectangle.setStart(start);
+        tool.setColor(color);
+        tool.mousePressed(e.getPoint());
+        shapes.add(tool.getShape());
 
     }
 
     @Override
     public void mouseDragged(MouseEvent e) {
-
-        rectangle.setEnd(e.getPoint());
-        tool.onDrag(e.getPoint());
-        shapes.add(rectangle);
+        tool.mouseDragged(e.getPoint());
         repaint();
 
     }
 
-
     @Override
     public void mouseReleased(MouseEvent e) {
-        rectangle.setEnd(e.getPoint());
+        tool.mouseReleased(e.getPoint());
         repaint();
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
-
     }
 
 
@@ -74,6 +65,9 @@ public class Canvas extends JComponent implements MouseMotionListener, MouseList
     @Override
     public void mouseExited(MouseEvent e) { }
 
+    public void setTool(Tool tool){
+        this.tool = tool;
+    }
 
     public void setColor(Color color) {
         this.color = color;
