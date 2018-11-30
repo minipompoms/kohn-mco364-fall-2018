@@ -5,8 +5,8 @@ import java.awt.*;
 public class RectangleTool implements Tool {
 
     private Rectangle rectangle;
-
     private Color color;
+    private boolean fill;
 
     public RectangleTool() {
     }
@@ -17,6 +17,11 @@ public class RectangleTool implements Tool {
     }
 
     @Override
+    public void isFilled(boolean fill) {
+        this.fill = fill;
+    }
+
+    @Override
     public Rectangle getShape() {
         return rectangle;
     }
@@ -24,6 +29,7 @@ public class RectangleTool implements Tool {
     @Override
     public void mousePressed(Point start) {
         rectangle = new Rectangle(color);
+        rectangle.setFilled(fill);
         rectangle.setStart(start);
     }
 

@@ -24,6 +24,11 @@ public class PencilTool implements Tool {
     }
 
     @Override
+    public void isFilled(boolean fill) {
+
+    }
+
+    @Override
     public void mousePressed(Point point) {
         line = new Line(color);
     }

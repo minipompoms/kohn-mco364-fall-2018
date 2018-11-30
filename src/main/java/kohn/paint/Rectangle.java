@@ -7,6 +7,7 @@ public class Rectangle extends Shape {
     private Color color;
     private Point start;
     private Point end;
+    private boolean fill;
 
     public Rectangle(Color color) {
         super(color);
@@ -15,6 +16,10 @@ public class Rectangle extends Shape {
 
     public Color getColor(){
         return color;
+    }
+
+    public void setFilled(boolean fill) {
+        this.fill = fill;
     }
 
     @Override
@@ -34,6 +39,12 @@ public class Rectangle extends Shape {
         int y = Math.min(start.y, end.y);
         int w = Math.abs(start.x - end.x);
         int h = Math.abs(start.y - end.y);
-        graphics.drawRect(x, y, w, h);
+        if(fill){
+            graphics.fillRect(x,y,w,h);
+        }
+        else{
+            graphics.drawRect(x, y, w, h);
+        }
     }
+
 }

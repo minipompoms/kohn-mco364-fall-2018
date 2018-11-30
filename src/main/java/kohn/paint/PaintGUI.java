@@ -8,12 +8,13 @@ import java.awt.*;
 public class PaintGUI extends JFrame {
 
     private Canvas canvas;
-    private JButton shapeButton;
-    private JButton lineButton;
+
+
     private Tool pencil = new PencilTool();
     private Tool rectangleTool = new RectangleTool();
 
     public PaintGUI() {
+
         setTitle("Paint");
         setSize(700, 550);
         setLocation(510, 250);
@@ -22,23 +23,38 @@ public class PaintGUI extends JFrame {
         Border border = new EmptyBorder(5,5,5,5);
         JPanel drawPanel = new JPanel(new GridLayout(0,1,20, 10));
         drawPanel.setBorder(border);
-        //JPanel buttonPanel = new JPanel(new GridLayout(1, 1, 40, 20));
         drawPanel.setBackground(Color.lightGray);
-        shapeButton = new JButton(new ImageIcon("src/images/shapes_tool.png"));
 
+        JButton undoButton = new JButton(new ImageIcon("src/images/undo_tool.png"));
+        undoButton.addActionListener(e -> {
+
+        });
+
+        JButton eraserButton = new JButton(new ImageIcon("src/images/eraser_tool.png"));
+        eraserButton.addActionListener(e -> {
+
+        });
+
+        JButton shapeButton = new JButton(new ImageIcon("src/images/shape_tool.png"));
         shapeButton.addActionListener(e -> {
             canvas.setTool(rectangleTool);
+            rectangleTool.isFilled(false);
         });
-        lineButton = new JButton(new ImageIcon("src/images/pencil_tool.png"));
+
+        JButton lineButton = new JButton(new ImageIcon("src/images/pencil_tool.png"));
         lineButton.addActionListener(e ->{
             canvas.setTool(pencil);
 
         });
 
-        drawPanel.add(shapeButton);
-        drawPanel.add(lineButton);
+        JButton fillButton = new JButton(new ImageIcon("src/images/shape_fill_tool.png"));
+        fillButton.addActionListener(e ->{
+            rectangleTool.isFilled(true);
+            canvas.setTool(rectangleTool);
+        });
+
+
         JButton colorButton = new JButton(new ImageIcon("src/images/color_tool.png"));
-        drawPanel.add(colorButton);
         colorButton.addActionListener(e -> {
             Color newColor = JColorChooser.showDialog(
                     PaintGUI.this,
@@ -47,8 +63,14 @@ public class PaintGUI extends JFrame {
             canvas.setColor(newColor);
 
         });
+        drawPanel.add(undoButton);
+        drawPanel.add(eraserButton);
+        drawPanel.add(fillButton);
+        drawPanel.add(shapeButton);
+        drawPanel.add(lineButton);
+        drawPanel.add(colorButton);
+
         add(drawPanel, BorderLayout.WEST);
-       // add(buttonPanel, BorderLayout.NORTH);
         add(canvas, BorderLayout.CENTER);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
