@@ -34,7 +34,6 @@ public class Canvas extends JComponent implements MouseMotionListener, MouseList
     public void mousePressed(MouseEvent e) {
         tool.setColor(color);
         tool.mousePressed(e.getPoint());
-
         shapes.add(tool.getShape());
 
     }
@@ -77,5 +76,10 @@ public class Canvas extends JComponent implements MouseMotionListener, MouseList
         return color;
     }
 
+    public void undo(){
+        int size = shapes.size()-1;
+        shapes.remove(size);
+        repaint();
+    }
 
 }

@@ -12,6 +12,7 @@ public class PaintGUI extends JFrame {
 
     private Tool pencil = new PencilTool();
     private Tool rectangleTool = new RectangleTool();
+    private Tool eraserTool = new EraserTool();
 
     public PaintGUI() {
 
@@ -27,12 +28,12 @@ public class PaintGUI extends JFrame {
 
         JButton undoButton = new JButton(new ImageIcon("src/images/undo_tool.png"));
         undoButton.addActionListener(e -> {
-
+            canvas.undo();
         });
 
         JButton eraserButton = new JButton(new ImageIcon("src/images/eraser_tool.png"));
         eraserButton.addActionListener(e -> {
-
+            canvas.setTool(eraserTool);
         });
 
         JButton shapeButton = new JButton(new ImageIcon("src/images/shape_tool.png"));

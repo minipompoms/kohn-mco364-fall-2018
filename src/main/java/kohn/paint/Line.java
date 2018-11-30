@@ -8,8 +8,9 @@ public class Line extends Shape {
     public ArrayList<Point> lines = new ArrayList<>();
     private Point start;
     private Point end;
+    private boolean stroke;
 
-    public Line(Color color){
+    public Line(Color color) {
         super(color);
         this.color = color;
     }
@@ -32,14 +33,24 @@ public class Line extends Shape {
         super.setEnd(end);
     }
 
+
+    public void setStroke(boolean stroke) {
+        this.stroke = stroke;
+    }
+
     @Override
     public void draw(Graphics graphics) {
         super.draw(graphics);
+        Graphics2D g2 = (Graphics2D) graphics;
 
-        for(int i = 1; i < lines.size(); i++){
+        for (int i = 1; i < lines.size(); i++) {
             start = lines.get(i);
-            end = lines.get(i-1);
-            graphics.drawLine(start.x, start.y, end.x, end.y);
+            end = lines.get(i - 1);
+            if (stroke) {
+                g2.setStroke(new BasicStroke(6));
+            }
+            g2.drawLine(start.x, start.y, end.x, end.y);
+
         }
     }
 }
