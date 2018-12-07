@@ -1,9 +1,15 @@
 package kohn.paint;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import static java.awt.image.BufferedImage.TYPE_INT_ARGB;
 
 public class PaintGUI extends JFrame {
 
@@ -13,6 +19,8 @@ public class PaintGUI extends JFrame {
     private Tool pencil = new PencilTool();
     private Tool rectangleTool = new RectangleTool();
     private Tool eraserTool = new EraserTool();
+    private BufferedImage bufferedImage;
+
 
     public PaintGUI() {
 
@@ -54,6 +62,26 @@ public class PaintGUI extends JFrame {
             canvas.setTool(rectangleTool);
         });
 
+        JButton saveButton = new JButton(new ImageIcon("src/images/file_icon.png"));
+        saveButton.addActionListener(e -> {
+            bufferedImage = new BufferedImage(canvas.getWidth(), canvas.getHeight(), TYPE_INT_ARGB);
+            Graphics2D g2 = bufferedImage.createGraphics();
+            canvas.paint(g2);
+            JFileChooser fileChooser = new JFileChooser("/src/");
+            fileChooser.isFileSelectionEnabled();
+            int returnValue = fileChooser.showOpenDialog(null);
+            if(returnValue == JFileChooser.APPROVE_OPTION){
+
+            }
+            try {
+                ImageIO.write(bufferedImage, "png", new File("saved_image.png"));
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
+            });
+
+
 
         JButton colorButton = new JButton(new ImageIcon("src/images/color_tool.png"));
         colorButton.addActionListener(e -> {
@@ -64,20 +92,22 @@ public class PaintGUI extends JFrame {
             canvas.setColor(newColor);
 
         });
+
+        drawPanel.add(saveButton);
         drawPanel.add(undoButton);
         drawPanel.add(eraserButton);
         drawPanel.add(fillButton);
         drawPanel.add(shapeButton);
         drawPanel.add(lineButton);
         drawPanel.add(colorButton);
-
         add(drawPanel, BorderLayout.WEST);
         add(canvas, BorderLayout.CENTER);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     }
 
-
+    public void save(){
+    }
 
     public static void main(String[] args) {
 

@@ -5,8 +5,11 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.awt.image.BufferedImage.TYPE_INT_ARGB;
 
 public class Canvas extends JComponent implements MouseMotionListener, MouseListener {
 
@@ -15,18 +18,18 @@ public class Canvas extends JComponent implements MouseMotionListener, MouseList
 
     private Tool tool;
 
-
     public Canvas() {
         this.addMouseMotionListener(this);
         this.addMouseListener(this);
 
     }
 
-    public void paintComponent(Graphics g) {
-        super.paintComponent(g);
+    public void paintComponent(Graphics graphics) {
+        super.paintComponent(graphics);
         for (Shape shape : shapes) {
-            shape.draw(g);
+            shape.draw(graphics);
         }
+
     }
 
 

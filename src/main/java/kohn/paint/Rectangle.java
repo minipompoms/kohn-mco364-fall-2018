@@ -43,7 +43,7 @@ public class Rectangle extends Shape {
         int w = Math.abs(start.x - end.x);
         int h = Math.abs(start.y - end.y);
         if(fill){
-            graphics.fillRect(x,y,w,h);
+            graphics.fillRect(x, y, w, h);
         }
         else{
             graphics.drawRect(x, y, w, h);
