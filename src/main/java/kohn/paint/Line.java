@@ -49,7 +49,10 @@ public class Line extends Shape {
             if (stroke) {
                 g2.setStroke(new BasicStroke(6));
             }
-            g2.drawLine(start.x, start.y, end.x, end.y);
+            else {
+                g2.setStroke(new BasicStroke(1));
+            }
+                g2.drawLine(start.x, start.y, end.x, end.y);
 
         }
     }

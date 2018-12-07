@@ -78,8 +78,11 @@ public class Canvas extends JComponent implements MouseMotionListener, MouseList
 
     public void undo(){
         int size = shapes.size()-1;
-        shapes.remove(size);
-        repaint();
+        if(shapes.size() > 0){
+            shapes.remove(size);
+            repaint();
+        }
+
     }
 
 }

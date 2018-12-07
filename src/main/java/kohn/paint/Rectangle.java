@@ -35,6 +35,9 @@ public class Rectangle extends Shape {
     @Override
     public void draw(Graphics graphics) {
         super.draw(graphics);
+        Graphics2D g2 = (Graphics2D) graphics;
+        g2.setStroke(new BasicStroke(1));
+
         int x = Math.min(start.x, end.x);
         int y = Math.min(start.y, end.y);
         int w = Math.abs(start.x - end.x);
