@@ -31,9 +31,7 @@ public class Canvas extends JComponent implements MouseMotionListener, MouseList
         for (Shape shape : shapes) {
             shape.draw(graphics);
         }
-
         paintImage(graphics);
-
     }
 
     @Override
@@ -41,7 +39,6 @@ public class Canvas extends JComponent implements MouseMotionListener, MouseList
         tool.setColor(color);
         tool.mousePressed(e.getPoint());
         shapes.add(tool.getShape());
-
     }
 
     @Override
@@ -70,7 +67,7 @@ public class Canvas extends JComponent implements MouseMotionListener, MouseList
     @Override
     public void mouseExited(MouseEvent e) { }
 
-    public void setTool(Tool tool){
+    public void setTool(Tool tool) {
         this.tool = tool;
     }
 
@@ -82,9 +79,9 @@ public class Canvas extends JComponent implements MouseMotionListener, MouseList
         return color;
     }
 
-    public void undo(){
-        int size = shapes.size()-1;
-        if(shapes.size() > 0){
+    public void undo() {
+        int size = shapes.size() - 1;
+        if (shapes.size() > 0) {
             shapes.remove(size);
             repaint();
         }
@@ -107,10 +104,11 @@ public class Canvas extends JComponent implements MouseMotionListener, MouseList
     }
 
 
-    public void saveAsObject(){
+    public void saveAsObject(String fileName) {
+        fileName = fileName.substring(0, fileName.lastIndexOf("."))+".ser";
         FileOutputStream outputStream = null;
         try {
-            outputStream = new FileOutputStream("shapes.ser");
+            outputStream = new FileOutputStream("src/resources/"+fileName);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -127,12 +125,9 @@ public class Canvas extends JComponent implements MouseMotionListener, MouseList
         }
     }
 
-    public List<Shape> readObject() {
-        String filepath = "/Users/paige/IdeaProjects/kohn-mco364-fall-2018/shapes.ser";
+    public List<Shape> readObject(String filepath) {
         List<Shape> shapeObjects = new ArrayList<>();
-
         try {
-
             FileInputStream fin = new FileInputStream(filepath);
             ObjectInputStream ois = new ObjectInputStream(fin);
             Object obj = ois.readObject();
@@ -144,8 +139,9 @@ public class Canvas extends JComponent implements MouseMotionListener, MouseList
         return shapeObjects;
     }
 
-   public void restoreShapes(){
-        shapes = readObject();
+    public void restoreShapes(String filename) {
+        filename = "src/resources/" + filename;
+        shapes = readObject(filename);
         repaint();
-   }
+    }
 }

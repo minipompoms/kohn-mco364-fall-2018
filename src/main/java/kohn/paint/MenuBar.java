@@ -18,6 +18,7 @@ public class MenuBar extends JMenuBar {
     private JMenuItem exit;
     private JMenuItem restore;
 
+
     public MenuBar(Canvas canvas) {
 
         open = new JMenuItem("Open");
@@ -31,11 +32,13 @@ public class MenuBar extends JMenuBar {
 
         save.addActionListener(e -> {
             save(filename, canvas);
-            canvas.saveAsObject();
+            canvas.saveAsObject(filename);
         });
 
         restore.addActionListener(e ->{
-            canvas.restoreShapes();
+            String input = JOptionPane.showInputDialog(" File Name? ");
+            setFilename(input + ".ser");
+            canvas.restoreShapes(filename);
         });
 
         exit.addActionListener(e -> {
@@ -43,14 +46,15 @@ public class MenuBar extends JMenuBar {
         });
    }
 
+
     public JMenuBar createMenuBar() {
         JMenuBar menuBar = new JMenuBar();
         JMenu fileMenu = new JMenu("File");
 
         fileMenu.add(open);
         fileMenu.add(save);
-        fileMenu.add(exit);
         fileMenu.add(restore);
+        fileMenu.add(exit);
 
         menuBar.add(fileMenu);
         return menuBar;
@@ -97,12 +101,14 @@ public class MenuBar extends JMenuBar {
     }
 
     private String getFileExtension(File file) {
-        String fileName = file.getName();
-        if (fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0)
-            return fileName.substring(fileName.lastIndexOf(".") + 1);
+        filename = file.getName();
+        if (filename.lastIndexOf(".") != -1 && filename.lastIndexOf(".") != 0)
+            return filename.substring(filename.lastIndexOf(".") + 1);
         else return "";
     }
 
-
+    public void setFilename(String filename) {
+        this.filename = filename;
+    }
 
 }
