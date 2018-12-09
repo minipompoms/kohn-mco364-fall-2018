@@ -91,7 +91,6 @@ public class Canvas extends JComponent implements MouseMotionListener, MouseList
 
     }
 
-
     private void paintImage(Graphics graphics) {
         Graphics2D g2 = (Graphics2D) graphics.create();
         int w = buffImage.getWidth();
@@ -100,7 +99,6 @@ public class Canvas extends JComponent implements MouseMotionListener, MouseList
         g2.dispose();
         revalidate();
         repaint();
-
     }
 
 
@@ -108,7 +106,8 @@ public class Canvas extends JComponent implements MouseMotionListener, MouseList
         buffImage = bufferedImage;
     }
 
-    public void saveObject(){
+
+    public void saveAsObject(){
         FileOutputStream outputStream = null;
         try {
             outputStream = new FileOutputStream("shapes.ser");
@@ -128,10 +127,25 @@ public class Canvas extends JComponent implements MouseMotionListener, MouseList
         }
     }
 
+    public List<Shape> readObject() {
+        String filepath = "/Users/paige/IdeaProjects/kohn-mco364-fall-2018/shapes.ser";
+        List<Shape> shapeObjects = new ArrayList<>();
 
-    public void restoreObject(){
+        try {
 
+            FileInputStream fin = new FileInputStream(filepath);
+            ObjectInputStream ois = new ObjectInputStream(fin);
+            Object obj = ois.readObject();
+            shapeObjects = (ArrayList<Shape>) obj;
+            ois.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return shapeObjects;
     }
 
-
+   public void restoreShapes(){
+        shapes = readObject();
+        repaint();
+   }
 }

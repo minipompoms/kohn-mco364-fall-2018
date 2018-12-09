@@ -4,8 +4,8 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+
 import static java.awt.image.BufferedImage.TYPE_INT_ARGB;
 
 public class MenuBar extends JMenuBar {
@@ -16,12 +16,14 @@ public class MenuBar extends JMenuBar {
     private JMenuItem open;
     private JMenuItem save;
     private JMenuItem exit;
+    private JMenuItem restore;
 
     public MenuBar(Canvas canvas) {
 
         open = new JMenuItem("Open");
         save = new JMenuItem("Save");
         exit = new JMenuItem("Exit");
+        restore = new JMenuItem("Restore");
 
         open.addActionListener(e -> {
             open(canvas);
@@ -29,16 +31,17 @@ public class MenuBar extends JMenuBar {
 
         save.addActionListener(e -> {
             save(filename, canvas);
-            canvas.saveObject();
+            canvas.saveAsObject();
+        });
+
+        restore.addActionListener(e ->{
+            canvas.restoreShapes();
         });
 
         exit.addActionListener(e -> {
             System.exit(0);
         });
-
-
-
-    }
+   }
 
     public JMenuBar createMenuBar() {
         JMenuBar menuBar = new JMenuBar();
@@ -47,6 +50,7 @@ public class MenuBar extends JMenuBar {
         fileMenu.add(open);
         fileMenu.add(save);
         fileMenu.add(exit);
+        fileMenu.add(restore);
 
         menuBar.add(fileMenu);
         return menuBar;

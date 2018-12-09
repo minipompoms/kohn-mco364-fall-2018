@@ -3,8 +3,7 @@ package kohn.paint;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class Line extends Shape {
-
+public class Line extends Shape  {
     public ArrayList<Point> lines = new ArrayList<>();
     private Point start;
     private Point end;

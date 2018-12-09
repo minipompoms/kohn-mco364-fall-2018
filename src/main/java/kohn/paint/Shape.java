@@ -1,8 +1,11 @@
 package kohn.paint;
 
 import java.awt.*;
+import java.io.Serializable;
 
-public abstract class Shape {
+public abstract class Shape implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     Color color;
     Point start;
     Point end;
