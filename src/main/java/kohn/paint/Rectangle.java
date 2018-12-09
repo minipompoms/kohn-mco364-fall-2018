@@ -37,17 +37,19 @@ public class Rectangle extends Shape {
         super.draw(graphics);
         Graphics2D g2 = (Graphics2D) graphics;
         g2.setStroke(new BasicStroke(1));
+        if(start != null && end != null){
+            int x = Math.min(start.x, end.x);
+            int y = Math.min(start.y, end.y);
+            int w = Math.abs(start.x - end.x);
+            int h = Math.abs(start.y - end.y);
+            if(fill){
+                graphics.fillRect(x, y, w, h);
+            }
+            else{
+                graphics.drawRect(x, y, w, h);
+            }
+        }
 
-        int x = Math.min(start.x, end.x);
-        int y = Math.min(start.y, end.y);
-        int w = Math.abs(start.x - end.x);
-        int h = Math.abs(start.y - end.y);
-        if(fill){
-            graphics.fillRect(x, y, w, h);
-        }
-        else{
-            graphics.drawRect(x, y, w, h);
-        }
     }
 
 }
