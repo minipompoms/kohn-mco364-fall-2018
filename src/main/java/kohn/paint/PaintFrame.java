@@ -3,11 +3,11 @@ package kohn.paint;
 import javax.swing.*;
 import java.awt.*;
 
-public class PaintGUI extends JFrame {
+public class PaintFrame extends JFrame {
 
     private Canvas canvas;
 
-    public PaintGUI() {
+    public PaintFrame() {
 
         setTitle("Paint");
         setSize(700, 550);
