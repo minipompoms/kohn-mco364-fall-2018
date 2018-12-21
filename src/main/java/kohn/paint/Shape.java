@@ -1,6 +1,7 @@
 package kohn.paint;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.Serializable;
 
 public abstract class Shape implements Serializable {
@@ -26,8 +27,8 @@ public abstract class Shape implements Serializable {
         return color;
     }
 
-    public void draw(Graphics graphics){
-        graphics.setColor(color);
+    public void draw(Graphics imageGraphics, BufferedImage bufferedImage){
+        imageGraphics.setColor(color);
     }
 
 }

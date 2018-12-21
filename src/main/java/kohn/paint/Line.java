@@ -1,6 +1,7 @@
 package kohn.paint;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class Line extends Shape  {
@@ -38,9 +39,9 @@ public class Line extends Shape  {
     }
 
     @Override
-    public void draw(Graphics graphics) {
-        super.draw(graphics);
-        Graphics2D g2 = (Graphics2D) graphics;
+    public void draw(Graphics imageGraphics, BufferedImage bufferedImage) {
+        super.draw(imageGraphics, bufferedImage);
+        Graphics2D g2 = (Graphics2D) imageGraphics;
 
         for (int i = 1; i < lines.size(); i++) {
             start = lines.get(i);

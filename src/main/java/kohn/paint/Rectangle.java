@@ -1,6 +1,7 @@
 package kohn.paint;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class Rectangle extends Shape {
 
@@ -33,9 +34,9 @@ public class Rectangle extends Shape {
     }
 
     @Override
-    public void draw(Graphics graphics) {
-        super.draw(graphics);
-        Graphics2D g2 = (Graphics2D) graphics;
+    public void draw(Graphics imageGraphics, BufferedImage bufferedImage) {
+        super.draw(imageGraphics, bufferedImage);
+        Graphics2D g2 = (Graphics2D) imageGraphics;
         g2.setStroke(new BasicStroke(1));
         if(start != null && end != null){
             int x = Math.min(start.x, end.x);
@@ -43,10 +44,10 @@ public class Rectangle extends Shape {
             int w = Math.abs(start.x - end.x);
             int h = Math.abs(start.y - end.y);
             if(fill){
-                graphics.fillRect(x, y, w, h);
+                imageGraphics.fillRect(x, y, w, h);
             }
             else{
-                graphics.drawRect(x, y, w, h);
+                imageGraphics.drawRect(x, y, w, h);
             }
         }
 

@@ -25,11 +25,11 @@ public class Canvas extends JComponent implements MouseMotionListener, MouseList
 
     }
 
-    public void paintComponent(Graphics graphics) {
+    public void paintComponent(Graphics graphics, BufferedImage buffImage) {
         super.paintComponent(graphics);
 
         for (Shape shape : shapes) {
-            shape.draw(graphics);
+            shape.draw(graphics, buffImage);
         }
         paintImage(graphics);
     }
