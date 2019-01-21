@@ -19,10 +19,7 @@ class MazeTest {
     void generateMaze() {
     }
 
-    @Test
-    void createPath() {
-        
-    }
+    
 
     @Test
     void getRows() {

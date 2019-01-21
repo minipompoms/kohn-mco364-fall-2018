@@ -3,24 +3,23 @@ package kohn.maze.gui;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-public class MazeGUI extends JFrame implements ActionListener {
+public class MazeGUI extends JFrame  {
 
     MazeView maze = new MazeView();
     JPanel panel = new JPanel();
 
     String width;
     String height;
-    int rows = 10;
-    int cols = 10;
+    int rows = 8;
+    int cols = 8;
 
-    JTextField heightField;
-    JTextField widthField;
-    JLabel heightLabel;
-    JLabel widthLabel;
-    JButton enterButton;
+    private JTextField heightField;
+    private JTextField widthField;
+    private JLabel heightLabel;
+    private JLabel widthLabel;
+    private JButton enterButton;
+
 
     public MazeGUI() {
 
@@ -62,18 +61,24 @@ public class MazeGUI extends JFrame implements ActionListener {
             maze.setRows(rows);
             maze.setCols(cols);
             maze.createMaze();
-            repaint();
+            maze.onStart(true);
+
+            maze.repaint();
         });
+
 
         maze.setRows(rows);
         maze.setCols(rows);
         maze.createMaze();
         entries.add(enterButton);
+
         panel.add(maze, BorderLayout.CENTER);
+
         add(panel);
         Color grey = new Color(180, 180, 180);
         entries.setBackground(Color.GRAY);
         panel.setBackground(grey);
+
     }
 
 
@@ -82,8 +87,6 @@ public class MazeGUI extends JFrame implements ActionListener {
         new MazeGUI().setVisible(true);
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
 
-    }
+
 }
